@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Результат покупки</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<h1>Результат покупки</h1>
+<p th:if="${resultMessage.success}">Покупка успешно завершена!</p>
+<p th:unless="${resultMessage.success}">Ошибка при покупке: <span th:text="${resultMessage.message}"></span></p>
+
+<h2>Детали:</h2>
+<ul>
+  <li>Магазин: <span th:text="${resultMessage.storeName}"></span></li>
+  <li>Продукт: <span th:text="${resultMessage.productName}"></span></li>
+  <li>Количество: <span th:text="${resultMessage.quantity}"></span></li>
+  <li>Баланс после покупки: <span th:text="${resultMessage.remainingBalance}"></span></li>
+</ul>
+
+<a href="/inv/buyProductForm" class="btn btn-secondary">Вернуться к форме</a>
+<div class="text-center mt-4">
+  <a href="/home" class="btn btn-secondary">Вернуться на главную</a>
+  <a href="/logout" class="btn btn-secondary">Выйти с аккаунта</a>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
