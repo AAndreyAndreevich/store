@@ -1,16 +1,22 @@
 package app.dto;
 
 import app.enam.InventoryOperationType;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.math.BigDecimal;
 
 public class InventoryOperationResult {
-
+    @JsonProperty("operationType")
     private InventoryOperationType operationName;
+    @JsonProperty("balance")
     private BigDecimal remainingBalance;
+    @JsonProperty("productName")
     private String productName;
+    @JsonProperty("count")
     private Integer quantity;
+    @JsonProperty("username")
     private String ownerName;
+    @JsonProperty("storeName")
     private String storeName;
     private boolean success;
 

@@ -1,11 +1,11 @@
 package app.enam;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public enum InventoryOperationType {
 
     BUY_PRODUCT("Покупка продукта"),
-    SELL_PRODUCT("Продажа продукта"),
-    ERROR_NOT_FOUND("Не найдено"),
-    SERVER_ERROR("Внутренняя ошибка");
+    SELL_PRODUCT("Продажа продукта");
 
     private final String name;
 
@@ -13,6 +13,7 @@ public enum InventoryOperationType {
         this.name = name;
     }
 
+    @JsonValue
     public String getName() {
         return name;
     }

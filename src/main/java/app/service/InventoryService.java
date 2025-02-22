@@ -58,51 +58,8 @@ public class InventoryService {
     }
 
     @Transactional
-    public InventoryOperationResult buyProduct(Long storeId, Long productId, Integer count) {
-        Long accountId = securityUtils.getCurrentUserId(accountRepository);
-        Account account = accountRepository.findById(accountId)
-                .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
-        Store store = storeRepository.findById(storeId)
-                .orElseThrow(() -> new NotFoundException("Магазин не найден"));
-
-        validateStoreOwnership(storeId, account);
-
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new NotFoundException("Продукт не найден"));
-
-        if (count <= 0) {
-            throw new InvalidInputException("Количество не может быть равно или меньше нуля");
-        }
-
-        BigDecimal totalCost = product.getPrice().multiply(BigDecimal.valueOf(count));
-        if (account.getBalance().compareTo(totalCost) < 0) {
-            throw new InsufficientBalanceException("Недостаточно средств");
-        }
-
-        Inventory inventory = inventoryRepository.findByStoreAndProduct(store, product)
-                        .orElseGet(() -> createNewInventory(store, product));
-
-        if (inventory.getQuantity() + count > 69) {
-            throw new ExceedsStorageCapacityException(
-                    "Превышена вместимость склада. Текущее количество: " + inventory.getQuantity() +
-                            ", максимальная вместимость: 69"
-            );
-        }
-
-        inventory.setQuantity(inventory.getQuantity() + count);
-        account.setBalance(account.getBalance().subtract(totalCost));
-        accountRepository.save(account);
-        inventoryRepository.save(inventory);
-        log.info("В магазин '{}' произошла закупка '{}' в количестве {} штук", store.getName(), product.getName(), count);
-
-        return new InventoryOperationResult(
-                InventoryOperationType.BUY_PRODUCT, account.getBalance(), product.getName(), count,
-                account.getUsername(), store.getName(), true
-        );
-    }
-
-    @Transactional
-    public InventoryOperationResult sellProduct(Long storeId, Long productId, Integer count) {
+    public InventoryOperationResult manageProduct(Long storeId, Long productId,
+                                                  Integer count, InventoryOperationType operationType) {
         Long accountId = securityUtils.getCurrentUserId(accountRepository);
         Account account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
@@ -123,18 +80,36 @@ public class InventoryService {
         Inventory inventory = inventoryRepository.findByStoreAndProduct(store, product)
                 .orElseGet(() -> createNewInventory(store, product));
 
-        if (inventory.getQuantity() - count < 0) {
-            throw new ExceedsStorageCapacityException(
-                    "Превышен лимит количества продукта. Текущее количество: " + inventory.getQuantity()
-            );
+        if (operationType.equals(InventoryOperationType.BUY_PRODUCT)) {
+            if (inventory.getQuantity() + count > 69) {
+                throw new ExceedsStorageCapacityException(
+                        "Превышена вместимость склада. Текущее количество: " + inventory.getQuantity() +
+                                ", максимальная вместимость: 69"
+                );
+            }
+            inventory.setQuantity(inventory.getQuantity() + count);
+            account.setBalance(account.getBalance().subtract(totalCost));
+        } else if (operationType.equals(InventoryOperationType.SELL_PRODUCT)) {
+            if (inventory.getQuantity() - count < 0) {
+                throw new ExceedsStorageCapacityException(
+                        "Превышен лимит количества продукта. Текущее количество: " + inventory.getQuantity()
+                );
+            }
+            inventory.setQuantity(inventory.getQuantity() - count);
+            account.setBalance(account.getBalance().add(totalCost));
+        } else {
+            throw new InvalidInputException("Неизвестный тип операции");
         }
-
-        inventory.setQuantity(inventory.getQuantity() - count);
-
-        account.setBalance(account.getBalance().add(totalCost));
-
-        return new InventoryOperationResult(InventoryOperationType.SELL_PRODUCT, account.getBalance(),
-                product.getName(), count, account.getUsername(), store.getName(), true);
+        log.info("В магазине '{}' произошла операция '{}' над продуктом '{}' в количестве {} штук",
+                store.getName(), operationType, product.getName(), count);
+        return new InventoryOperationResult(
+                operationType,
+                account.getBalance(),
+                product.getName(),
+                count,
+                account.getUsername(),
+                store.getName(),
+                true);
     }
 
     private Inventory createNewInventory(Store store, Product product) {

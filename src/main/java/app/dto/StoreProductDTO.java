@@ -1,12 +1,17 @@
 package app.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.math.BigDecimal;
 
 public class StoreProductDTO {
-
+    @JsonProperty("productId")
     private Long id;
+    @JsonProperty("productName")
     private String name;
+    @JsonProperty("price")
     private BigDecimal price;
+    @JsonProperty("quantity")
     private Integer quantity;
 
     public StoreProductDTO() {

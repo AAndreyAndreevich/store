@@ -3,22 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <title>Главная страница</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
 <div class="container mt-5">
   <h1>Добро пожаловать!</h1>
   <div class="mt-4">
-    <a href="/inv/buyProductForm" class="btn btn-primary">Купить</a>
-    <a href="/inv/sellProductForm" class="btn btn-success">Продать</a>
-    <a href="/inv/getAllProductsForm" class="btn btn-info">Список продуктов</a>
-    <a href="/store/createStoreForm" class="btn btn-primary">Создать магазин</a>
-    <a href="/store/deleteStoreForm" class="btn btn-success">Удалить магазин</a>
+    <a href="/inv/getAllProductsForm" style="text-decoration: none;">
+      <button type="button">Список продуктов</button>
+    </a>
+    <a href="/store/createStoreForm" style="text-decoration: none;">
+      <button type="button">Создать магазин</button>
+    </a>
+    <a href="/inv/manageProductForm" style="text-decoration: none;">
+      <button type="button">Управление продуктами</button>
+    </a>
+
   </div>
 </div>
-<div class="text-center mt-4">
-  <a href="/logout" class="btn btn-secondary">Выйти с аккаунта</a>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<br>
+<a href="/logout" style="text-decoration: none;">
+  <button type="button">Выйти с аккаунта</button>
+</a>
 </body>
 </html>

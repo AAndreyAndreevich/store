@@ -1,9 +1,10 @@
 package app.enam;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public enum StoreOperationType {
 
-    CREATE("Создание магазина"),
-    DELETE("Удаление магазина");
+    CREATE("Создание магазина");
 
     private final String name;
 
@@ -11,6 +12,7 @@ public enum StoreOperationType {
         this.name = name;
     }
 
+    @JsonValue
     public String getName() {
         return name;
     }

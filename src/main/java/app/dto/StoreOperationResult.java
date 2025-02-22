@@ -1,11 +1,14 @@
 package app.dto;
 
 import app.enam.StoreOperationType;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class StoreOperationResult {
-
+    @JsonProperty("operationType")
     private StoreOperationType operationName;
+    @JsonProperty("accountId")
     private Long accountId;
+    @JsonProperty("storeId")
     private Long storeId;
 
     public StoreOperationResult(StoreOperationType name, Long accountId, Long storeId) {

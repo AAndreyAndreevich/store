@@ -52,20 +52,4 @@ public class StoreService {
         return new StoreOperationResult(StoreOperationType.CREATE, accountId, null);
     }
 
-    @Transactional
-    public StoreOperationResult deleteStore(Long storeId) {
-        Long accountId = securityUtils.getCurrentUserId(accountRepository);
-        Account account = accountRepository.findById(accountId)
-                .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
-        Store store = storeRepository.findById(storeId)
-                .orElseThrow(() -> new NotFoundException("Магазина с id '" + storeId + "' не существует"));
-        if (!store.getOwner().equals(accountId)) {
-            throw new AccessDeniedException("Пользователю '" + account.getUsername() + "' не принадлежит магазин"
-            + store.getName());
-        }
-        storeRepository.delete(store);
-        log.info("Магазин '{}' пользователя '{}' удален", store.getName(), account.getUsername());
-        return new StoreOperationResult(StoreOperationType.DELETE, accountId, store.getId());
-    }
-
 }
