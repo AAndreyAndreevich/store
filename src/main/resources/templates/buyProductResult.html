@@ -7,8 +7,8 @@
 </head>
 <body>
 <h1>Результат покупки</h1>
-<p th:if="${resultMessage.success}">Покупка успешно завершена!</p>
-<p th:unless="${resultMessage.success}">Ошибка при покупке: <span th:text="${resultMessage.message}"></span></p>
+<p th:if="${resultMessage.success}">Операция успешно завершена!</p>
+<p th:unless="${resultMessage.success}">Ошибка при операции: <span th:text="${resultMessage.message}"></span></p>
 
 <h2>Детали:</h2>
 <ul>
