@@ -9,7 +9,8 @@
 
 ## Ссылки
 
-- GitHub-проект с тестами: https://github.com/AAndreyAndreevich/store-tests.git
+- GitHub-проект с тестами: https://github.com!/AAndreyAndreevich/store-tests.git
+временно неактуален, переделал html код, скорее всего присутствуют несовпадения с поисками элементов
 
 ## Контакты
 
