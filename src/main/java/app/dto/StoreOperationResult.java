@@ -6,15 +6,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class StoreOperationResult {
     @JsonProperty("operationType")
     private StoreOperationType operationName;
-    @JsonProperty("accountId")
-    private Long accountId;
-    @JsonProperty("storeId")
-    private Long storeId;
+    @JsonProperty("username")
+    private String ownerName;
+    @JsonProperty("storeName")
+    private String storeName;
 
-    public StoreOperationResult(StoreOperationType name, Long accountId, Long storeId) {
+    public StoreOperationResult(StoreOperationType name, String ownerName, String storeName) {
         this.operationName = name;
-        this.accountId = accountId;
-        this.storeId = storeId;
+        this.ownerName = ownerName;
+        this.storeName = storeName;
     }
 
     public StoreOperationType getOperationName() {
@@ -25,19 +25,19 @@ public class StoreOperationResult {
         this.operationName = operationName;
     }
 
-    public Long getAccountId() {
-        return accountId;
+    public String getOwnerName() {
+        return ownerName;
     }
 
-    public void setAccountId(Long accountId) {
-        this.accountId = accountId;
+    public void setOwnerName(String ownerName) {
+        this.ownerName = ownerName;
     }
 
-    public Long getStoreId() {
-        return storeId;
+    public String getStoreName() {
+        return storeName;
     }
 
-    public void setStoreId(Long storeId) {
-        this.storeId = storeId;
+    public void setStoreName(String storeName) {
+        this.storeName = storeName;
     }
 }

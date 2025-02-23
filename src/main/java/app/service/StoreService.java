@@ -49,7 +49,7 @@ public class StoreService {
         log.info("Попытка сохранить магазин: \n {}", store);
         storeRepository.save(store);
         log.info("Магазин '{}' успешно создан пользователем '{}'", storeName, account.getUsername());
-        return new StoreOperationResult(StoreOperationType.CREATE, accountId, null);
+        return new StoreOperationResult(StoreOperationType.CREATE, account.getUsername(), store.getName());
     }
 
 }

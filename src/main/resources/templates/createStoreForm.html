@@ -3,6 +3,7 @@
 <head>
     <title>Создание магазина</title>
     <meta charset="UTF-8">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 <h1>Создать магазин</h1>
@@ -30,8 +31,8 @@
                 document.getElementById("createStoreResult").innerHTML = `
                     <h2>Результат операции:</h2>
                     <p>Тип операции: ${response.operationType}</p>
-                    <p>ID магазина: ${response.storeId}</p>
-                    <p>ID пользователя: ${response.accountId}</p>
+                    <p>Пользователь: ${response.username}</p>
+                    <p>Название магазина: ${response.storeName}</p>
                 `;
             },
             error: function(xhr) {

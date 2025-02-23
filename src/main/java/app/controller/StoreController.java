@@ -1,6 +1,7 @@
 package app.controller;
 
 import app.dto.StoreOperationResult;
+import app.enam.StoreOperationType;
 import app.handler.AccessDeniedException;
 import app.handler.AlreadyExistsException;
 import app.handler.InvalidInputException;
@@ -28,7 +29,7 @@ public class StoreController {
     }
 
     @GetMapping("/createStoreForm")
-    public String createStoreForm(Model model) {
+    public String createStoreForm() {
         return "createStoreForm";
     }
 
