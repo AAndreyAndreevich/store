@@ -81,6 +81,9 @@ public class InventoryService {
                 .orElseGet(() -> createNewInventory(store, product));
 
         if (operationType.equals(InventoryOperationType.BUY_PRODUCT)) {
+            if (account.getBalance().compareTo(totalCost) < 0) {
+                throw new InsufficientBalanceException("Недостаточно средств на балансе для покупки");
+            }
             if (inventory.getQuantity() + count > 69) {
                 throw new ExceedsStorageCapacityException(
                         "Превышена вместимость склада. Текущее количество: " + inventory.getQuantity() +
