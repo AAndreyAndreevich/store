@@ -4,34 +4,59 @@
     <meta charset="UTF-8">
     <title>Получить список продуктов</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .error {
+            color: red;
+        }
+    </style>
 </head>
 <body>
 
-<h1>Получить продукты</h1>
+<h1>Получить список продуктов</h1>
+
 <form id="getAllProductsForm">
-    <label for="storeId">Магазин:</label>
+    <label for="storeId">Выберите магазин:</label>
     <select id="storeId" name="storeId" required>
-        <option th:each="store : ${stores}" th:value="${store.id}" th:text="${store.name}"></option>
+        <option value="">...</option>
+        <option th:each="store : ${stores}"
+                th:value="${store.id}"
+                th:text="${store.name}"></option>
     </select><br><br>
 
     <button type="button" onclick="submitGetAllProductsForm()">Получить продукты</button>
 </form>
 
-<div id="getAllProductsResult">
-    <h2>Продукты в магазине:</h2>
-    <ul>
-        <li th:each="product : ${products}">
-            <p>ID продукта: <span th:text="${product.productId}"></span></p>
-            <p>Название: <span th:text="${product.productName}"></span></p>
-            <p>Цена: <span th:text="${product.price}"></span></p>
-            <p>Количество: <span th:text="${product.quantity}"></span></p>
-        </li>
-    </ul>
-</div>
+<div id="getAllProductsResult"></div>
+
+<br>
+<a href="/home" style="text-decoration: none;">
+    <button type="button">Домой</button>
+</a>
+<a href="/logout" style="text-decoration: none;">
+    <button type="button">Выйти с аккаунта</button>
+</a>
 
 <script>
     function submitGetAllProductsForm() {
         const storeId = document.getElementById("storeId").value;
+
+        if (!storeId) {
+            alert("Пожалуйста, выберите магазин.");
+            return;
+        }
 
         $.ajax({
             url: "/inv/getAllProducts",
@@ -41,35 +66,49 @@
             },
             success: function(response) {
                 console.log("Ответ сервера:", response);
-                let resultHtml = "<h2>Продукты в магазине:</h2><ul>";
+
+                // Генерация таблицы с продуктами
+                let resultHtml = "<h2>Продукты в магазине:</h2>";
+                resultHtml += `
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID продукта</th>
+                                <th>Название</th>
+                                <th>Цена</th>
+                                <th>Количество</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+
                 response.forEach(product => {
                     resultHtml += `
-                        <li>
-                            <p>ID продукта: ${product.productId}</p>
-                            <p>Название: ${product.productName}</p>
-                            <p>Цена: ${product.price}</p>
-                            <p>Количество: ${product.quantity}</p>
-                        </li>
+                        <tr>
+                            <td>${product.productId}</td>
+                            <td>${product.productName}</td>
+                            <td>${product.price}</td>
+                            <td>${product.quantity}</td>
+                        </tr>
                     `;
                 });
-                resultHtml += "</ul>";
+
+                resultHtml += `
+                        </tbody>
+                    </table>
+                `;
+
                 document.getElementById("getAllProductsResult").innerHTML = resultHtml;
             },
             error: function(xhr) {
                 console.error("Ошибка:", xhr.responseText);
                 document.getElementById("getAllProductsResult").innerHTML = `
-                    <p style="color: red;">Ошибка: ${xhr.responseText}</p>
+                    <p class="error">Ошибка: ${xhr.responseText}</p>
                 `;
             }
         });
     }
 </script>
-<br>
-<a href="/home" style="text-decoration: none;">
-    <button type="button">Домой</button>
-</a>
-<a href="/logout" style="text-decoration: none;">
-    <button type="button">Выйти с аккаунта</button>
-</a>
+
 </body>
 </html>
