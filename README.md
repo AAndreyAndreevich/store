@@ -9,7 +9,7 @@
 
 ## Ссылки
 
-- GitHub-проект с тестами: https://github.com/AAndreyAndreevich/store-tests.git
+- GitHub-проект с UI-тестами на Selenium: https://github.com/AAndreyAndreevich/store-tests.git
 
 ## Контакты
 
