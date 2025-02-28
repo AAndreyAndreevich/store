@@ -36,12 +36,13 @@ public class StoreService {
 
     @Transactional
     public StoreOperationResult createStore(String storeName) {
-        Long accountId = securityUtils.getCurrentUserId(accountRepository);
-        Account account = accountRepository.findById(accountId)
-                .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
         if (StringUtils.isEmpty(storeName)) {
             throw new InvalidInputException("Название магазина не может быть пустым");
         }
+        Long accountId = securityUtils.getCurrentUserId(accountRepository);
+        Account account = accountRepository.findById(accountId)
+                .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
+
         if (storeRepository.existsByName(storeName)) {
             throw new AlreadyExistsException("Магазин с названием '" + storeName + "' существует");
         }
