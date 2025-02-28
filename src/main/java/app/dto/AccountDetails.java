@@ -22,7 +22,7 @@ public class AccountDetails implements UserDetails {
         this.password = password;
         this.active = active;
         this.authorities = roles.stream()
-                .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
+                .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
     }
 
