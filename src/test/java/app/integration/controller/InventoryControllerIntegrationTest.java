@@ -42,7 +42,6 @@ public class InventoryControllerIntegrationTest {
     private final Long productId = 1L;
     private final Integer count = 10;
 
-    private final String getAllProductUrl = "/inv/getAllProduct";
     private final String manageProductUrl = "/inv/manageProduct";
 
     private final InventoryOperationType buyOperation = InventoryOperationType.BUY_PRODUCT;
@@ -64,7 +63,7 @@ public class InventoryControllerIntegrationTest {
         when(inventoryService.getAllProducts(storeId)).thenThrow(
                 new NotFoundException("Магазин пуст или его не существует"));
 
-        mockMvc.perform(get(getAllProductUrl)
+        mockMvc.perform(get("/inv/getAllProduct")
                 .param("storeId", storeId.toString()))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string("Магазин пуст или его не существует"));
