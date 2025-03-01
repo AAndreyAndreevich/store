@@ -26,6 +26,11 @@ public class Account {
     public Account() {
     }
 
+    public Account(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
     public Account(Long id, String username, String password, BigDecimal balance, Collection<Role> roles, boolean active) {
         this.id = id;
         this.username = username;
