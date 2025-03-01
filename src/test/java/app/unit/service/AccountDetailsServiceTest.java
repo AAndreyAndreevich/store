@@ -1,9 +1,10 @@
-package app.service;
+package app.unit.service;
 
 import app.entity.Account;
 import app.entity.Role;
 import app.repository.AccountRepository;
 import app.repository.RoleRepository;
+import app.service.AccountDetailsService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

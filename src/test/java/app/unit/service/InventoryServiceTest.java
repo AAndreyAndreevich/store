@@ -1,4 +1,4 @@
-package app.service;
+package app.unit.service;
 
 import app.dto.InventoryOperationResult;
 import app.dto.StoreProductDTO;
@@ -15,6 +15,7 @@ import app.repository.AccountRepository;
 import app.repository.InventoryRepository;
 import app.repository.ProductRepository;
 import app.repository.StoreRepository;
+import app.service.InventoryService;
 import app.utils.SecurityUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

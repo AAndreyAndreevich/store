@@ -1,4 +1,4 @@
-package app.service;
+package app.unit.service;
 
 import app.dto.StoreOperationResult;
 import app.enam.StoreOperationType;
@@ -9,6 +9,7 @@ import app.handler.InvalidInputException;
 import app.handler.NotFoundException;
 import app.repository.AccountRepository;
 import app.repository.StoreRepository;
+import app.service.StoreService;
 import app.utils.SecurityUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
