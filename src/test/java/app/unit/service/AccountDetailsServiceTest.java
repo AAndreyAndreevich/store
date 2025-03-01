@@ -35,7 +35,7 @@ class AccountDetailsServiceTest {
     private AccountDetailsService accountDetailsService;
 
     @Test
-    public void registerUser_Success() {
+    public void testRegisterUser_Success() {
         Account user = new Account();
         user.setUsername("testUser");
         user.setPassword("password");
@@ -56,7 +56,7 @@ class AccountDetailsServiceTest {
     }
 
     @Test
-    public void loadUserByUsername_Success() {
+    public void testLoadUserByUsername_Success() {
         String username = "testUser";
         Account account = new Account();
         account.setId(1L);
@@ -84,7 +84,7 @@ class AccountDetailsServiceTest {
     }
 
     @Test
-    public void loadUsername_UserNotFound() {
+    public void testLoadUsername_UserNotFound() {
         String username = "nonExistentUser";
         when(accountRepository.findByUsername(username)).thenReturn(Optional.empty());
 

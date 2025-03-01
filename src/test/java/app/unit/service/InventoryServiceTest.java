@@ -89,7 +89,7 @@ class InventoryServiceTest {
     }
 
     @Test
-    public void getAllProducts_Success() {
+    public void testGetAllProducts_Success() {
         when(inventoryRepository.findByStoreId(1L)).thenReturn(inventories);
 
         List<StoreProductDTO> result = inventoryService.getAllProducts(1L);
@@ -107,7 +107,7 @@ class InventoryServiceTest {
     }
 
     @Test
-    public void getAllProducts_StoreEmpty() {
+    public void testGetAllProducts_StoreEmpty() {
         when(inventoryRepository.findByStoreId(1L)).thenReturn(List.of());
 
         NotFoundException exception = assertThrows(NotFoundException.class, () -> {
@@ -120,7 +120,7 @@ class InventoryServiceTest {
     }
 
     @Test
-    public void manageProduct_buyProduct() {
+    public void testManageProduct_buyProduct() {
         when(securityUtils.getCurrentUserId(accountRepository)).thenReturn(1L);
         when(accountRepository.findById(1L)).thenReturn(Optional.of(testAccount));
         when(storeRepository.findById(1L)).thenReturn(Optional.of(testStore));
@@ -147,7 +147,7 @@ class InventoryServiceTest {
     }
 
     @Test
-    public void manageProduct_sellProduct() {
+    public void testManageProduct_sellProduct() {
         when(securityUtils.getCurrentUserId(accountRepository)).thenReturn(1L);
         when(accountRepository.findById(1L)).thenReturn(Optional.of(testAccount));
         when(storeRepository.findById(1L)).thenReturn(Optional.of(testStore));
@@ -174,7 +174,7 @@ class InventoryServiceTest {
     }
 
     @Test
-    public void manageProduct_UserNotFound() {
+    public void testManageProduct_UserNotFound() {
         when(securityUtils.getCurrentUserId(accountRepository)).thenReturn(1L);
         when(accountRepository.findById(1L)).thenReturn(Optional.empty());
 
@@ -190,7 +190,7 @@ class InventoryServiceTest {
     }
 
     @Test
-    public void manageProduct_StoreNotFount() {
+    public void testManageProduct_StoreNotFount() {
         when(securityUtils.getCurrentUserId(accountRepository)).thenReturn(1L);
         when(accountRepository.findById(1L)).thenReturn(Optional.of(testAccount));
         when(storeRepository.findById(1L)).thenReturn(Optional.empty());
@@ -207,7 +207,7 @@ class InventoryServiceTest {
     }
 
     @Test
-    public void manageProduct_ProductNotFound() {
+    public void testManageProduct_ProductNotFound() {
         when(securityUtils.getCurrentUserId(accountRepository)).thenReturn(1L);
         when(accountRepository.findById(1L)).thenReturn(Optional.of(testAccount));
         when(storeRepository.findById(1L)).thenReturn(Optional.of(testStore));
@@ -225,7 +225,7 @@ class InventoryServiceTest {
     }
 
     @Test
-    public void manageProduct_ZeroQuantity() {
+    public void testManageProduct_ZeroQuantity() {
         when(securityUtils.getCurrentUserId(accountRepository)).thenReturn(1L);
         when(accountRepository.findById(1L)).thenReturn(Optional.of(testAccount));
         when(storeRepository.findById(1L)).thenReturn(Optional.of(testStore));
@@ -243,7 +243,7 @@ class InventoryServiceTest {
     }
 
     @Test
-    public void manageProduct_ExcessBalance() {
+    public void testManageProduct_ExcessBalance() {
         when(securityUtils.getCurrentUserId(accountRepository)).thenReturn(1L);
         when(accountRepository.findById(1L)).thenReturn(Optional.of(testAccount));
         when(storeRepository.findById(1L)).thenReturn(Optional.of(testStore));
@@ -264,7 +264,7 @@ class InventoryServiceTest {
     }
 
     @Test
-    public void manageProduct_ExceedsStorage() {
+    public void testManageProduct_ExceedsStorage() {
         when(securityUtils.getCurrentUserId(accountRepository)).thenReturn(1L);
         when(accountRepository.findById(1L)).thenReturn(Optional.of(testAccount));
         when(storeRepository.findById(1L)).thenReturn(Optional.of(testStore));

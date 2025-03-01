@@ -30,7 +30,7 @@ public class InventoryControllerTest {
     private InventoryController inventoryController;
 
     @Test
-    public void getAllProductsFormTest() {
+    public void testGetAllProductsForm() {
         when(storeRepository.findAll()).thenReturn(Collections.emptyList());
 
         String viewName = inventoryController.getAllProductsForm(model);

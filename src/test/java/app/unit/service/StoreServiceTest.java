@@ -50,7 +50,7 @@ class StoreServiceTest {
     }
 
     @Test
-    public void createStore_Success() {
+    public void testCreateStore_Success() {
         when(securityUtils.getCurrentUserId(accountRepository)).thenReturn(1L);
         when(accountRepository.findById(1L)).thenReturn(Optional.of(testAccount));
         when(storeRepository.existsByName(storeName)).thenReturn(false);
@@ -66,7 +66,7 @@ class StoreServiceTest {
     }
 
     @Test
-    public void createStore_EmptyStoreName() {
+    public void testCreateStore_EmptyStoreName() {
         String emptyStoreName = "";
 
         InvalidInputException exception = assertThrows(InvalidInputException.class, () -> {
@@ -78,7 +78,7 @@ class StoreServiceTest {
     }
 
     @Test
-    public void createStore_StoreAlreadyExists() {
+    public void testCreateStore_StoreAlreadyExists() {
         when(securityUtils.getCurrentUserId(accountRepository)).thenReturn(1L);
         when(accountRepository.findById(1L)).thenReturn(Optional.of(testAccount));
         when(storeRepository.existsByName(storeName)).thenReturn(true);
@@ -93,7 +93,7 @@ class StoreServiceTest {
     }
 
     @Test
-    public void createStore_UserNotFount() {
+    public void testCreateStore_UserNotFount() {
         when(securityUtils.getCurrentUserId(accountRepository)).thenReturn(1L);
         when(accountRepository.findById(1L)).thenReturn(Optional.empty());
 
