@@ -8,6 +8,7 @@ import app.handler.NotFoundException;
 import app.repository.StoreRepository;
 import app.service.InventoryService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -70,7 +71,7 @@ public class InventoryControllerIntegrationTest {
     }
 
     @Test
-    public void testManageProduct_Success() throws Exception {
+    public void testManageProduct_BuyProduct() throws Exception {
         InventoryOperationResult result = new InventoryOperationResult(
                 buyOperation,
                 BigDecimal.valueOf(1000),
@@ -88,6 +89,29 @@ public class InventoryControllerIntegrationTest {
                 .param("productId", productId.toString())
                 .param("count", count.toString())
                 .param("operationType", buyOperation.name()))
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(result)));
+    }
+
+    @Test
+    public void testManageProduct_SellProduct() throws Exception {
+        InventoryOperationResult result = new InventoryOperationResult(
+                buyOperation,
+                BigDecimal.valueOf(1000),
+                "product",
+                count,
+                "user",
+                "store",
+                true
+        );
+
+        when(inventoryService.manageProduct(storeId, productId, count, sellOperation)).thenReturn(result);
+
+        mockMvc.perform(post("/inv/manageProduct")
+                        .param("storeId", storeId.toString())
+                        .param("productId", productId.toString())
+                        .param("count", count.toString())
+                        .param("operationType", buyOperation.name()))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(result)));
     }
