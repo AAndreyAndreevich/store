@@ -48,9 +48,9 @@ class AccountDetailsServiceTest {
 
         accountDetailsService.registerUser(user);
 
-        assertEquals(Collections.singleton(userRole), user.getRoles());
-        assertEquals("encodedPassword", user.getPassword());
-        assertEquals(new BigDecimal(5000), user.getBalance());
+        assertEquals(Collections.singleton(userRole), user.getRoles(), "Ожидает значение 'testUser'");
+        assertEquals("encodedPassword", user.getPassword(), "Ожидает значение 'password'");
+        assertEquals(new BigDecimal(5000), user.getBalance(), "Ожидает значение '5000'");
         assertTrue(user.isActive());
         verify(accountRepository, times(1)).save(user);
     }
@@ -73,8 +73,8 @@ class AccountDetailsServiceTest {
         UserDetails userDetails = accountDetailsService.loadUserByUsername(username);
 
         assertNotNull(userDetails);
-        assertEquals(username, userDetails.getUsername());
-        assertEquals("encodedPassword", userDetails.getPassword());
+        assertEquals(username, userDetails.getUsername(), "Ожидает значение 'testUser'");
+        assertEquals("encodedPassword", userDetails.getPassword(), "Ожидает значение 'password'");
         assertTrue(userDetails.isEnabled());
         assertTrue(userDetails.getAuthorities().stream()
                 .anyMatch(grantedAuthority ->
@@ -92,7 +92,8 @@ class AccountDetailsServiceTest {
             accountDetailsService.loadUserByUsername(username);
         });
 
-        assertEquals("Пользователь с таким именем не найден: " + username, exception.getMessage());
+        assertEquals("Пользователь с таким именем не найден: " + username, exception.getMessage(),
+                "Сообщение должно быть 'Пользователь с таким именем не найден: " + username + "'");
         verify(accountRepository, times(1)).findByUsername(username);
     }
 }

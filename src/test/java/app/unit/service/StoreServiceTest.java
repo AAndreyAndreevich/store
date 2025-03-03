@@ -58,9 +58,9 @@ class StoreServiceTest {
         StoreOperationResult result = storeService.createStore(storeName);
 
         assertNotNull(result);
-        assertEquals(StoreOperationType.CREATE, result.getOperationName());
-        assertEquals(testAccount.getUsername(), result.getOwnerName());
-        assertEquals(storeName, result.getStoreName());
+        assertEquals(StoreOperationType.CREATE, result.getOperationName(), "Должен вернуть название операции");
+        assertEquals(testAccount.getUsername(), result.getOwnerName(), "Должен вернуть имя пользователя");
+        assertEquals(storeName, result.getStoreName(), "Должен вернуть название магазина");
 
         verify(storeRepository, times(1)).save(any(Store.class));
     }
@@ -73,7 +73,8 @@ class StoreServiceTest {
             storeService.createStore(emptyStoreName);
         });
 
-        assertEquals("Название магазина не может быть пустым", exception.getMessage());
+        assertEquals("Название магазина не может быть пустым", exception.getMessage(),
+                "Сообщение должно быть 'Название магазина не может быть пустым'");
         verify(storeRepository, never()).save(any(Store.class));
     }
 
@@ -87,7 +88,8 @@ class StoreServiceTest {
             storeService.createStore(storeName);
         });
 
-        assertEquals("Магазин с названием '" + storeName + "' существует", exception.getMessage());
+        assertEquals("Магазин с названием '" + storeName + "' существует", exception.getMessage(),
+                "Сообщение должно быть 'Магазин с названием '" + storeName + "' существует'");
 
         verify(storeRepository, never()).save(any(Store.class));
     }
@@ -101,7 +103,8 @@ class StoreServiceTest {
            storeService.createStore(storeName);
         });
 
-        assertEquals("Пользователь не найден", exception.getMessage());
+        assertEquals("Пользователь не найден", exception.getMessage(),
+                "Сообщение должно быть 'Пользователь не найден'");
 
         verify(storeRepository, never()).save(any(Store.class));
     }

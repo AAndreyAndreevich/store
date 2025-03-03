@@ -98,10 +98,10 @@ class InventoryServiceTest {
         assertEquals(1, result.size());
 
         StoreProductDTO dto = result.get(0);
-        assertEquals(testProduct.getId(), dto.getId());
-        assertEquals(testProduct.getName(), dto.getName());
-        assertEquals(testProduct.getPrice(), dto.getPrice());
-        assertEquals(testInventory.getQuantity(), dto.getQuantity());
+        assertEquals(testProduct.getId(), dto.getId(), "Ожидает значение '1'");
+        assertEquals(testProduct.getName(), dto.getName(), "Ожидает значение 'Яблоко'");
+        assertEquals(testProduct.getPrice(), dto.getPrice(), "Ожидает значение '55'");
+        assertEquals(testInventory.getQuantity(), dto.getQuantity(), "Ожидает значение '1'");
 
         verify(inventoryRepository, times(1)).findByStoreId(1L);
     }
@@ -114,7 +114,8 @@ class InventoryServiceTest {
             inventoryService.getAllProducts(1L);
         });
 
-        assertEquals("Магазин пуст или его не существует", exception.getMessage());
+        assertEquals("Магазин пуст или его не существует", exception.getMessage(),
+                "Сообщение должно быть ''");
 
         verify(inventoryRepository, times(1)).findByStoreId(1L);
     }
@@ -138,10 +139,11 @@ class InventoryServiceTest {
         );
 
         assertNotNull(result);
-        assertEquals(InventoryOperationType.BUY_PRODUCT, result.getOperationName());
-        assertEquals(testAccount.getUsername(), result.getOwnerName());
-        assertEquals(testStore.getName(), result.getStoreName());
-        assertEquals(testProduct.getName(), result.getProductName());
+        assertEquals(InventoryOperationType.BUY_PRODUCT, result.getOperationName(),
+                "Ожидает значение 'Покупка продукта'");
+        assertEquals(testAccount.getUsername(), result.getOwnerName(), "Ожидает значение 'testUser'");
+        assertEquals(testStore.getName(), result.getStoreName(), "Ожидает значение 'Test Store'");
+        assertEquals(testProduct.getName(), result.getProductName(), "Ожидает значение 'Яблоко'");
 
         verify(inventoryRepository, times(1)).save(any(Inventory.class));
     }
@@ -165,10 +167,11 @@ class InventoryServiceTest {
         );
 
         assertNotNull(result);
-        assertEquals(InventoryOperationType.SELL_PRODUCT, result.getOperationName());
-        assertEquals(testAccount.getUsername(), result.getOwnerName());
-        assertEquals(testStore.getName(), result.getStoreName());
-        assertEquals(testProduct.getName(), result.getProductName());
+        assertEquals(InventoryOperationType.SELL_PRODUCT, result.getOperationName(),
+                "Ожидает значение 'Продажа продукта'");
+        assertEquals(testAccount.getUsername(), result.getOwnerName(), "Ожидает значение 'testUser'");
+        assertEquals(testStore.getName(), result.getStoreName(), "Ожидает значение 'Test Store'");
+        assertEquals(testProduct.getName(), result.getProductName(), "Ожидает значение 'Яблоко'");
 
         verify(inventoryRepository, times(1)).save(any(Inventory.class));
     }
@@ -184,7 +187,8 @@ class InventoryServiceTest {
             );
         });
 
-        assertEquals("Пользователь не найден", exception.getMessage());
+        assertEquals("Пользователь не найден", exception.getMessage(),
+                "Сообщение должно быть 'Пользователь не найден'");
 
         verify(inventoryRepository, never()).save(any(Inventory.class));
     }
@@ -201,7 +205,8 @@ class InventoryServiceTest {
             );
         });
 
-        assertEquals("Магазин не найден", exception.getMessage());
+        assertEquals("Магазин не найден", exception.getMessage(),
+                "Сообщение должно быть 'Магазин не найден'");
 
         verify(inventoryRepository, never()).save(any(Inventory.class));
     }
@@ -219,7 +224,8 @@ class InventoryServiceTest {
             );
         });
 
-        assertEquals("Продукт не найден", exception.getMessage());
+        assertEquals("Продукт не найден", exception.getMessage(),
+                "Сообщение должно быть 'Продукт не найден'");
 
         verify(inventoryRepository, never()).save(any(Inventory.class));
     }
@@ -237,7 +243,8 @@ class InventoryServiceTest {
             );
         });
 
-        assertEquals("Количество не может быть равно или меньше нуля", exception.getMessage());
+        assertEquals("Количество не может быть равно или меньше нуля", exception.getMessage(),
+                "Сообщение должно быть 'Количество не может быть равно или меньше нуля'");
 
         verify(inventoryRepository, never()).save(any(Inventory.class));
     }
@@ -258,7 +265,8 @@ class InventoryServiceTest {
             );
         });
 
-        assertEquals("Недостаточно средств на балансе для покупки", exception.getMessage());
+        assertEquals("Недостаточно средств на балансе для покупки", exception.getMessage(),
+                "Сообщение должно быть 'Недостаточно средств на балансе для покупки'");
 
         verify(inventoryRepository, times(1)).save(any(Inventory.class));
     }
@@ -278,7 +286,9 @@ class InventoryServiceTest {
         });
 
         assertEquals("Превышена вместимость склада. Текущее количество: " + testInventory.getQuantity() +
-                ", максимальная вместимость: 69", exception.getMessage());
+                ", максимальная вместимость: 69", exception.getMessage(),
+                "Сообщение должно быть 'Превышена вместимость склада. " +
+                        "Текущее количество: " + testInventory.getQuantity() + ", максимальная вместимость: 69'");
 
         verify(inventoryRepository, never()).save(any(Inventory.class));
     }
