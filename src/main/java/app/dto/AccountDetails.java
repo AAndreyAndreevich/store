@@ -1,6 +1,7 @@
 package app.dto;
 
 import app.entity.Account;
+import app.entity.Role;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,14 +17,14 @@ public class AccountDetails implements UserDetails {
     private final Collection<? extends GrantedAuthority> authorities;
     private final boolean active;
 
-    public AccountDetails(Long id, String username, String password, Collection<String> roles, boolean active) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
-        this.active = active;
-        this.authorities = roles.stream()
-                .map(SimpleGrantedAuthority::new)
+    public AccountDetails(Account account) {
+        this.id = account.getId();
+        this.username = account.getUsername();
+        this.password = account.getPassword();
+        this.authorities = account.getRoles().stream()
+                .map(role -> new SimpleGrantedAuthority(role.getName()))
                 .collect(Collectors.toList());
+        this.active = account.isActive();
     }
 
     @Override

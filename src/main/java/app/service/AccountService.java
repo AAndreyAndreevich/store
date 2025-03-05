@@ -9,7 +9,10 @@ import app.handler.InvalidUsernameException;
 import app.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
+@Service
 public class AccountService {
 
     private static final int MIN_USERNAME_LENGTH = 4;
@@ -17,13 +20,18 @@ public class AccountService {
     private static final int MIN_PASSWORD_LENGTH = 6;
     private static final int MAX_PASSWORD_LENGTH = 30;
 
-    private AccountDetailsService accountDetailsService;
-    private AccountRepository accountRepository;
+    private final AccountDetailsService accountDetailsService;
+    private final AccountRepository accountRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public AccountService(AccountDetailsService accountDetailsService, AccountRepository accountRepository) {
+    public AccountService(
+            AccountDetailsService accountDetailsService,
+            AccountRepository accountRepository,
+            PasswordEncoder passwordEncoder) {
         this.accountDetailsService = accountDetailsService;
         this.accountRepository = accountRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public AccountOperationResult register(String username, String password) {
@@ -50,11 +58,10 @@ public class AccountService {
 
     public AccountOperationResult login(String username, String password) {
         UserDetails userDetails = accountDetailsService.loadUserByUsername(username);
-        if (userDetails != null && password.equals(userDetails.getPassword())) {
+        if (userDetails != null && passwordEncoder.matches(password, userDetails.getPassword())) {
             return new AccountOperationResult(username, AccountOperationType.LOG_IN, true);
         } else {
             throw new InvalidAuthorizationException("Неверный логин или пароль");
         }
     }
-
 }

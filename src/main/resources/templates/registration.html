@@ -1,25 +1,57 @@
 <!DOCTYPE html>
-<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>Registration</title>
+  <title>Регистрация</title>
+  <style>
+    .error-message {
+        color: red;
+        margin-bottom: 10px;
+    }
+  </style>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 <h2>Регистрация</h2>
-<form th:action="@{/registration}" th:object="${account}" method="post">
+<form id="registration-form">
   <div>
     <label>Логин:</label>
-    <input type="text" th:field="*{username}" required/>
+    <input type="text" id="username" name="username" required>
   </div>
-  <br>
   <div>
     <label>Пароль:</label>
-    <input type="password" th:field="*{password}" required/>
+    <input type="password" id="password" name="password" required>
   </div>
+  <div id="error-message" class="error-message"></div>
+  <button type="submit">Зарегистрироваться</button>
   <br>
-  <div>
-    <button type="submit">Регистрация</button>
-  </div>
+  <a href="/login" style="text-decoration: none;">
+    <button type="button">Авторизироваться</button>
+  </a>
 </form>
+
+<script>
+  $(document).ready(function() {
+      $('#registration-form').on('submit', function(event) {
+          event.preventDefault();
+
+          const username = $('#username').val();
+          const password = $('#password').val();
+
+          $.ajax({
+              url: '/registration',
+              method: 'POST',
+              contentType: 'application/x-www-form-urlencoded',
+              data: `username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`,
+              success: function(response) {
+                  window.location.href = '/login'; // Перенаправление на страницу входа
+              },
+              error: function(jqXHR, status, error) {
+                  $('#error-message').text(jqXHR.responseText); // Показываем текст ошибки
+              }
+          });
+      });
+  });
+</script>
 </body>
 </html>

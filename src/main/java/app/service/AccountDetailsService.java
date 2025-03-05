@@ -3,8 +3,6 @@ package app.service;
 import app.dto.AccountDetails;
 import app.entity.Account;
 import app.entity.Role;
-import app.handler.InvalidPasswordException;
-import app.handler.InvalidUsernameException;
 import app.repository.AccountRepository;
 import app.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.Collection;
 import java.util.Collections;
 
 @Service
@@ -27,7 +24,10 @@ public class AccountDetailsService  implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public AccountDetailsService(AccountRepository accountRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+    public AccountDetailsService(
+            AccountRepository accountRepository,
+            RoleRepository roleRepository,
+            PasswordEncoder passwordEncoder) {
         this.accountRepository = accountRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
@@ -50,12 +50,6 @@ public class AccountDetailsService  implements UserDetailsService {
         if (!account.isActive()) {
             throw new UsernameNotFoundException("Аккаунт не активен: " + username);
         }
-        Long id = account.getId();
-        String password = account.getPassword();
-        Collection<String> roles = account.getRoles().stream()
-                .map(Role::getName)
-                .toList();
-        boolean active = account.isActive();
-        return new AccountDetails(id, username, password, roles, active);
+        return new AccountDetails(account);
     }
 }
