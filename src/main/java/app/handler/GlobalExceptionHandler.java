@@ -45,6 +45,12 @@ public class GlobalExceptionHandler {
                 .body(e.getMessage());
     }
 
+    @ExceptionHandler(InvalidAuthorizationException.class)
+    public ResponseEntity<String> handleInvalidAuthorizationException(InvalidAuthorizationException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(e.getMessage());
+    }
+
     @ExceptionHandler(InvalidUsernameException.class)
     public ResponseEntity<String> handleInvalidUsernameException(InvalidUsernameException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
