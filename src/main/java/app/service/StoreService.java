@@ -53,4 +53,10 @@ public class StoreService {
         return new StoreOperationResult(StoreOperationType.CREATE, account.getUsername(), store.getName());
     }
 
+    @Transactional
+    public StoreOperationResult changeName(String storeName) {
+        //смена названия для магазина
+        return null;
+    }
+
 }

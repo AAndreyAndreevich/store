@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AccountService {
@@ -65,5 +66,17 @@ public class AccountService {
         }
         accountDetailsService.loadUserByUsername(username);
         return new AccountOperationResult(username, AccountOperationType.LOG_IN, true);
+    }
+
+    @Transactional
+    public AccountOperationResult changeName(String name) {
+        //смена имени для пользователя
+        return null;
+    }
+
+    @Transactional
+    public AccountOperationResult changePassword(String oldPassword, String newPassword) {
+        //смена пароля для пользователя
+        return null;
     }
 }
