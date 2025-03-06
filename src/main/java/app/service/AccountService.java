@@ -57,11 +57,13 @@ public class AccountService {
     }
 
     public AccountOperationResult login(String username, String password) {
-        UserDetails userDetails = accountDetailsService.loadUserByUsername(username);
-        if (userDetails != null && passwordEncoder.matches(password, userDetails.getPassword())) {
-            return new AccountOperationResult(username, AccountOperationType.LOG_IN, true);
-        } else {
-            throw new InvalidAuthorizationException("Неверный логин или пароль");
+        if (accountRepository.findByUsername(username).isEmpty()) {
+            throw new InvalidAuthorizationException("Пользователя с данным именем не существует: " + username);
         }
+        if (!passwordEncoder.matches(password, accountRepository.findByUsername(username).get().getPassword())) {
+            throw new InvalidAuthorizationException("Пароль указан не верно");
+        }
+        accountDetailsService.loadUserByUsername(username);
+        return new AccountOperationResult(username, AccountOperationType.LOG_IN, true);
     }
 }

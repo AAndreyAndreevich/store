@@ -6,6 +6,7 @@ import app.handler.InvalidAuthorizationException;
 import app.handler.InvalidPasswordException;
 import app.handler.InvalidUsernameException;
 import app.service.AccountService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -52,11 +53,17 @@ public class AccountController {
     public ResponseEntity<?> loginUser(@RequestParam String username, @RequestParam String password) {
         try {
             AccountOperationResult result = accountService.login(username, password);
-            return ResponseEntity.ok(result);
+            return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(result);
         } catch (InvalidAuthorizationException | UsernameNotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .contentType(MediaType.TEXT_PLAIN)
+                    .body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Внутренняя ошибка сервера: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .contentType(MediaType.TEXT_PLAIN)
+                    .body("Внутренняя ошибка сервера: " + e.getMessage());
         }
     }
 
