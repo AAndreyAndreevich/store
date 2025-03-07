@@ -37,6 +37,8 @@ public class AccountControllerIntegrationTest {
                 .andExpect(model().attributeExists("account"));
     }
 
+    //InvalidUsernameException InvalidPasswordException - для регистрации написать сценарии с ошибками
+
     @Test
     public void testRegisterUser() throws Exception {
         Account account = new Account();
@@ -57,6 +59,8 @@ public class AccountControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("login"));
     }
+
+    //InvalidAuthorizationException UsernameNotFoundException - для авторизации написать сценарии с ошибками
 
     @Test
     public void testLogout() throws Exception {
