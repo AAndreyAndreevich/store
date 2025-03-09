@@ -2,6 +2,7 @@ package app.controller;
 
 import app.dto.StoreOperationResult;
 import app.enam.StoreOperationType;
+import app.entity.Store;
 import app.handler.AccessDeniedException;
 import app.handler.AlreadyExistsException;
 import app.handler.InvalidInputException;
@@ -45,4 +46,23 @@ public class StoreController {
             return ResponseEntity.internalServerError().body("Внутренняя ошибка: " + e.getMessage());
         }
     }
+
+    @GetMapping("/changeStoreNameForm")
+    public String changeStoreNameForm(Model model) {
+        model.addAttribute("store", new Store());
+        return "changeStoreName";
+    }
+
+    @PostMapping("/changeStoreName")
+    public ResponseEntity<?> changeStoreName(@RequestParam String oldName, @RequestParam String newName) {
+        try {
+            StoreOperationResult result = storeService.changeName(oldName, newName);
+            return ResponseEntity.ok(result);
+        } catch (NotFoundException | InvalidInputException | AlreadyExistsException | AccessDeniedException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Внутренняя ошибка: " + e.getMessage());
+        }
+    }
+
 }
