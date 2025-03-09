@@ -82,7 +82,7 @@ public class StoreService {
         storeRepository.save(store);
 
         return new StoreOperationResult(
-                StoreOperationType.CHANGE_STORENAME, account.getUsername(), oldName + " -> " + newName
+                StoreOperationType.CHANGE_STORENAME, account.getUsername(), newName
         );
     }
 

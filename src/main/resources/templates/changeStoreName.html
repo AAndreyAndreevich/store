@@ -35,9 +35,9 @@
                 console.log("Ответ сервера:", response);
                 document.getElementById("changeStoreNameResult").innerHTML = `
                     <h2>Результат операции:</h2>
-                    <p>Тип операции: ${response.operationType.getName()}</p>
+                    <p>Тип операции: ${response.operationType}</p>
                     <p>Пользователь: ${response.username}</p>
-                    <p>Новое название магазина: newName</p>
+                    <p>Новое название магазина: ${response.storeName}</p>
                 `;
             },
             error: function(xhr) {

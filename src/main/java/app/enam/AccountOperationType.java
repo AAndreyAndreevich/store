@@ -1,5 +1,7 @@
 package app.enam;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public enum AccountOperationType {
 
     REGISTRATION_ACCOUNT("Регистрация аккаунта"),
@@ -13,6 +15,7 @@ public enum AccountOperationType {
         this.name = name;
     }
 
+    @JsonValue
     public String getName() {
         return name;
     }
