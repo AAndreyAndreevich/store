@@ -53,7 +53,7 @@ public class InventoryController {
         } catch (NotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Внутренняя ошибка: " + e.getMessage());
+            return ResponseEntity.internalServerError().body("Внутренняя ошибка: " + e.getMessage());
         }
     }
 
@@ -77,7 +77,7 @@ public class InventoryController {
                  ExceedsStorageCapacityException  | InvalidInputException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Внутренняя ошибка: " + e.getMessage());
+            return ResponseEntity.internalServerError().body("Внутренняя ошибка: " + e.getMessage());
         }
     }
 }

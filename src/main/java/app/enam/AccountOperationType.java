@@ -3,7 +3,9 @@ package app.enam;
 public enum AccountOperationType {
 
     REGISTRATION_ACCOUNT("Регистрация аккаунта"),
-    LOG_IN("Авторизация");
+    LOG_IN("Авторизация"),
+    CHANGE_USERNAME("Смена имени"),
+    CHANGE_PASSWORD("Смена пароля");
 
     private final String name;
 

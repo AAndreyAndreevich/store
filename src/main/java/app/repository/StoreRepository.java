@@ -9,4 +9,6 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
     boolean existsByName(String name);
     @Override
     Optional<Store> findById(Long storeId);
+
+    Optional<Store> findByName(String name);
 }

@@ -42,7 +42,7 @@ public class StoreController {
         } catch (NotFoundException | InvalidInputException | AlreadyExistsException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Внутренняя ошибка: " + e.getMessage());
+            return ResponseEntity.internalServerError().body("Внутренняя ошибка: " + e.getMessage());
         }
     }
 }

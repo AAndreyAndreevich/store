@@ -4,7 +4,8 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum StoreOperationType {
 
-    CREATE("Создание магазина");
+    CREATE("Создание магазина"),
+    CHANGE_STORENAME("Смена названия");
 
     private final String name;
 
