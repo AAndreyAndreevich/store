@@ -92,8 +92,8 @@ class AccountDetailsServiceTest {
             accountDetailsService.loadUserByUsername(username);
         });
 
-        assertEquals("Пользователь с таким именем не найден: " + username, exception.getMessage(),
-                "Сообщение должно быть 'Пользователь с таким именем не найден: " + username + "'");
+        assertEquals("Пользователь с таким именем не найден: testUser", exception.getMessage(),
+                "Сообщение должно быть 'Пользователь с таким именем не найден: testUser'");
         verify(accountRepository, times(1)).findByUsername(username);
     }
 }

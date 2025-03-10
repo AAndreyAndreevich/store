@@ -5,23 +5,39 @@ import app.enam.AccountOperationType;
 import app.entity.Account;
 import app.handler.*;
 import app.repository.AccountRepository;
+import app.service.AccountDetailsService;
 import app.service.AccountService;
+import app.utils.SecurityUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class AccountServiceTest {
 
     @Autowired
+    private AccountDetailsService accountDetailsService;
+    @Autowired
     private AccountRepository accountRepository;
+    @Autowired
+    private SecurityUtils securityUtils;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @InjectMocks
     private AccountService accountService;
 
+    private Account testAccount;
     private String username;
     private String password;
 
@@ -29,11 +45,21 @@ public class AccountServiceTest {
     public void setUp() {
         username = "testuser";
         password = "password";
+
+        testAccount.setUsername(username);
+        testAccount.setPassword(passwordEncoder.encode(password));
     }
 
     @Test
     public void register_UsernameIsExistsTest() {
+        when(accountRepository.findByUsername(username)).thenReturn(Optional.of(testAccount));
 
+        InvalidUsernameException exception = assertThrows(InvalidUsernameException.class, () -> {
+            accountService.register(username, password);
+        });
+
+        assertEquals("Пользователь с таким именем уже существует: " + username, exception.getMessage(),
+                "Сообщение должно быть 'Пользователь с таким именем уже существует: testuser'");
     }
 
     @Test

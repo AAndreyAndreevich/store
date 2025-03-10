@@ -285,10 +285,10 @@ class InventoryServiceTest {
             );
         });
 
-        assertEquals("Превышена вместимость склада. Текущее количество: " + testInventory.getQuantity() +
-                ", максимальная вместимость: 69", exception.getMessage(),
+        assertEquals("Превышена вместимость склада. Текущее количество: 1, максимальная вместимость: 69",
+                exception.getMessage(),
                 "Сообщение должно быть 'Превышена вместимость склада. " +
-                        "Текущее количество: " + testInventory.getQuantity() + ", максимальная вместимость: 69'");
+                        "Текущее количество: 1, максимальная вместимость: 69'");
 
         verify(inventoryRepository, never()).save(any(Inventory.class));
     }

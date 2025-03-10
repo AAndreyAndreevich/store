@@ -97,8 +97,8 @@ class StoreServiceTest {
             storeService.createStore(storeName);
         });
 
-        assertEquals("Магазин с названием '" + storeName + "' существует", exception.getMessage(),
-                "Сообщение должно быть 'Магазин с названием '" + storeName + "' существует'");
+        assertEquals("Магазин с названием 'Test Store' существует", exception.getMessage(),
+                "Сообщение должно быть 'Магазин с названием 'Test Store' существует'");
 
         verify(storeRepository, never()).save(any(Store.class));
     }
@@ -167,8 +167,8 @@ class StoreServiceTest {
             storeService.changeName(storeName, "тести");
         });
 
-        assertEquals("Магазин с названием '" + storeName + "' не найден", exception.getMessage(),
-                "Сообщение должно быть 'Магазин с названием '" + storeName + "' не найден'");
+        assertEquals("Магазин с названием 'Test Store' не найден", exception.getMessage(),
+                "Сообщение должно быть 'Магазин с названием 'Test Store' не найден'");
 
         verify(storeRepository, never()).save(any(Store.class));
     }
@@ -186,8 +186,8 @@ class StoreServiceTest {
             storeService.changeName(storeName, existsName);
         });
 
-        assertEquals("Магазин с названием '" + existsName + "' существует", exception.getMessage(),
-                "Сообщение должно быть 'Магазин с названием '" + existsName + "' существует'");
+        assertEquals("Магазин с названием 'Exists' существует", exception.getMessage(),
+                "Сообщение должно быть 'Магазин с названием 'Exists' существует'");
 
         verify(storeRepository, never()).save(any(Store.class));
     }
@@ -276,8 +276,8 @@ class StoreServiceTest {
 
         assertEquals(StoreOperationType.CHANGE_STORENAME, result.getOperationName(),
                 "Значение должно быть 'Смена названия'");
-        assertEquals(newNameStore, result.getStoreName(), "Значение должно быть '" + newNameStore + "'");
-        assertEquals(result.getOwnerName(), userName, "Значение должно быть '" + userName + "'");
+        assertEquals(newNameStore, result.getStoreName(), "Значение должно быть 'Самый новый'");
+        assertEquals(result.getOwnerName(), userName, "Значение должно быть 'testUser'");
 
         verify(storeRepository, times(1)).save(any(Store.class));
     }
