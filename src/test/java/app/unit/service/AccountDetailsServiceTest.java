@@ -48,9 +48,9 @@ class AccountDetailsServiceTest {
 
         accountDetailsService.registerUser(user);
 
-        assertEquals(Collections.singleton(userRole), user.getRoles(), "Ожидает значение 'testUser'");
-        assertEquals("encodedPassword", user.getPassword(), "Ожидает значение 'password'");
-        assertEquals(new BigDecimal(5000), user.getBalance(), "Ожидает значение '5000'");
+        assertEquals(Collections.singleton(userRole), user.getRoles(), "Значение должно быть 'testUser'");
+        assertEquals("encodedPassword", user.getPassword(), "Значение должно быть 'password'");
+        assertEquals(new BigDecimal(5000), user.getBalance(), "Значение должно быть '5000'");
         assertTrue(user.isActive());
         verify(accountRepository, times(1)).save(user);
     }
@@ -73,8 +73,8 @@ class AccountDetailsServiceTest {
         UserDetails userDetails = accountDetailsService.loadUserByUsername(username);
 
         assertNotNull(userDetails);
-        assertEquals(username, userDetails.getUsername(), "Ожидает значение 'testUser'");
-        assertEquals("encodedPassword", userDetails.getPassword(), "Ожидает значение 'password'");
+        assertEquals(username, userDetails.getUsername(), "Значение должно быть 'testUser'");
+        assertEquals("encodedPassword", userDetails.getPassword(), "Значение должно быть 'password'");
         assertTrue(userDetails.isEnabled());
         assertTrue(userDetails.getAuthorities().stream()
                 .anyMatch(grantedAuthority ->

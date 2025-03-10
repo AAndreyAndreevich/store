@@ -59,7 +59,7 @@ public class StoreService {
 
     @Transactional
     public StoreOperationResult changeName(String oldName, String newName) {
-        if (StringUtils.isEmpty(newName)) {
+        if (StringUtils.isEmpty(newName) || StringUtils.isEmpty(oldName)) {
             throw new InvalidInputException("Название магазина не может быть пустым");
         }
         Long accountId = securityUtils.getCurrentUserId(accountRepository);

@@ -3,9 +3,7 @@ package app.unit.service;
 import app.dto.AccountOperationResult;
 import app.enam.AccountOperationType;
 import app.entity.Account;
-import app.handler.InvalidAuthorizationException;
-import app.handler.InvalidPasswordException;
-import app.handler.InvalidUsernameException;
+import app.handler.*;
 import app.repository.AccountRepository;
 import app.service.AccountService;
 import org.junit.jupiter.api.BeforeEach;
@@ -75,6 +73,81 @@ public class AccountServiceTest {
 
     @Test
     public void login_SuccessTest() {
+
+    }
+
+    @Test
+    public void changeName_EmptyNewNameInputTest() {
+
+    }
+
+    @Test
+    public void changeName_EmptyOldNameInputTest() {
+
+    }
+
+    @Test
+    public void changeName_NotFoundUserTest() {
+
+    }
+
+    @Test
+    public void changeName_AccessDeniedTest() {
+
+    }
+
+    @Test
+    public void changeName_UsernameSymbolMoreLimitTest() {
+
+    }
+
+    @Test
+    public void changeName_UsernameSymbolLessLimitTest() {
+
+    }
+
+    @Test
+    public void changeName_UsernameIsExistsTest() {
+
+    }
+
+    @Test
+    public void changeName_SuccessTest() {
+
+    }
+
+    @Test
+    public void changePassword_EmptyInputTest() {
+
+    }
+
+    @Test
+    public void changePassword_NotFountUserTest() {
+
+    }
+
+    @Test
+    public void changePassword_InvalidCurrentPasswordTest() {
+
+    }
+
+    @Test
+    public void changePassword_NewPasswordEqualsOldPasswordTest() {
+
+    }
+
+    @Test
+    public void changePassword_PasswordSymbolMoreLimitTest() {
+
+    }
+
+    @Test
+    public void changePassword_PasswordSymbolLessLimitTest() {
+
+    }
+
+    @Test
+    public void changePassword_SuccessTest() {
 
     }
 }

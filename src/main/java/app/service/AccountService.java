@@ -65,14 +65,14 @@ public class AccountService {
 
     @Transactional
     public AccountOperationResult changeName(String oldName, String newName) {
+        if (StringUtils.isEmpty(newName) || StringUtils.isEmpty(oldName)) {
+            throw new InvalidInputException("Имя пользователя не может быть пустым");
+        }
         Long currentId = securityUtils.getCurrentUserId(accountRepository);
         Account account = accountRepository.findByUsername(oldName)
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
         if (!currentId.equals(account.getId())) {
             throw new AccessDeniedException("Пользователю не принадлежит это имя");
-        }
-        if (StringUtils.isEmpty(newName)) {
-            throw new InvalidInputException("Имя пользователя не может быть пустым");
         }
 
         checkUsernameLength(newName);
@@ -90,13 +90,12 @@ public class AccountService {
 
     @Transactional
     public AccountOperationResult changePassword(String oldPassword, String newPassword) {
+        if (StringUtils.isEmpty(newPassword) || StringUtils.isEmpty(oldPassword)) {
+            throw new InvalidInputException("Пароль не может быть пустым");
+        }
         Long currentId = securityUtils.getCurrentUserId(accountRepository);
         Account account = accountRepository.findById(currentId)
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
-
-        if (StringUtils.isEmpty(newPassword)) {
-            throw new InvalidInputException("Пароль не может быть пустым");
-        }
         checkPasswordLength(newPassword);
         if (!passwordEncoder.matches(oldPassword, account.getPassword())) {
             throw new InvalidPasswordException("Неправильно указан действующий пароль");

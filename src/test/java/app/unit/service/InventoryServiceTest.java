@@ -98,10 +98,10 @@ class InventoryServiceTest {
         assertEquals(1, result.size());
 
         StoreProductDTO dto = result.get(0);
-        assertEquals(testProduct.getId(), dto.getId(), "Ожидает значение '1'");
-        assertEquals(testProduct.getName(), dto.getName(), "Ожидает значение 'Яблоко'");
-        assertEquals(testProduct.getPrice(), dto.getPrice(), "Ожидает значение '55'");
-        assertEquals(testInventory.getQuantity(), dto.getQuantity(), "Ожидает значение '1'");
+        assertEquals(testProduct.getId(), dto.getId(), "Значение должно быть '1'");
+        assertEquals(testProduct.getName(), dto.getName(), "Значение должно быть 'Яблоко'");
+        assertEquals(testProduct.getPrice(), dto.getPrice(), "Значение должно быть '55'");
+        assertEquals(testInventory.getQuantity(), dto.getQuantity(), "Значение должно быть '1'");
 
         verify(inventoryRepository, times(1)).findByStoreId(1L);
     }
@@ -115,7 +115,7 @@ class InventoryServiceTest {
         });
 
         assertEquals("Магазин пуст или его не существует", exception.getMessage(),
-                "Сообщение должно быть ''");
+                "Сообщение должно быть 'Магазин пуст или его не существует'");
 
         verify(inventoryRepository, times(1)).findByStoreId(1L);
     }
@@ -140,10 +140,10 @@ class InventoryServiceTest {
 
         assertNotNull(result);
         assertEquals(InventoryOperationType.BUY_PRODUCT, result.getOperationName(),
-                "Ожидает значение 'Покупка продукта'");
-        assertEquals(testAccount.getUsername(), result.getOwnerName(), "Ожидает значение 'testUser'");
-        assertEquals(testStore.getName(), result.getStoreName(), "Ожидает значение 'Test Store'");
-        assertEquals(testProduct.getName(), result.getProductName(), "Ожидает значение 'Яблоко'");
+                "Значение должно быть 'Покупка продукта'");
+        assertEquals(testAccount.getUsername(), result.getOwnerName(), "Значение должно быть 'testUser'");
+        assertEquals(testStore.getName(), result.getStoreName(), "Значение должно быть 'Test Store'");
+        assertEquals(testProduct.getName(), result.getProductName(), "Значение должно быть 'Яблоко'");
 
         verify(inventoryRepository, times(1)).save(any(Inventory.class));
     }
@@ -168,10 +168,10 @@ class InventoryServiceTest {
 
         assertNotNull(result);
         assertEquals(InventoryOperationType.SELL_PRODUCT, result.getOperationName(),
-                "Ожидает значение 'Продажа продукта'");
-        assertEquals(testAccount.getUsername(), result.getOwnerName(), "Ожидает значение 'testUser'");
-        assertEquals(testStore.getName(), result.getStoreName(), "Ожидает значение 'Test Store'");
-        assertEquals(testProduct.getName(), result.getProductName(), "Ожидает значение 'Яблоко'");
+                "Значение должно быть 'Продажа продукта'");
+        assertEquals(testAccount.getUsername(), result.getOwnerName(), "Значение должно быть 'testUser'");
+        assertEquals(testStore.getName(), result.getStoreName(), "Значение должно быть 'Test Store'");
+        assertEquals(testProduct.getName(), result.getProductName(), "Значение должно быть 'Яблоко'");
 
         verify(inventoryRepository, times(1)).save(any(Inventory.class));
     }
