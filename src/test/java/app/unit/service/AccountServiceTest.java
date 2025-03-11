@@ -40,16 +40,22 @@ public class AccountServiceTest {
     private Account secondAccount;
     private String secondName;
     private String newUsername;
+    private String newPassword;
     private String username;
     private String password;
     private String littleUsername;
     private String biggiUsername;
+    private String bigPass;
+    private String minimalisticPassword;
 
     @BeforeEach
     public void setUp() {
         littleUsername = "min";
         biggiUsername = "BigNameSpecialForThisTest";
+        bigPass = "passwordISgreetingMEETyouSHOWyourTALANTpoolSWAPMboard";
+        minimalisticPassword = "pswrd";
         newUsername = "newuser";
+        newPassword = "newpass";
         username = "testuser";
         password = "password";
 
@@ -109,8 +115,6 @@ public class AccountServiceTest {
 
     @Test
     public void register_PasswordSymbolMoreLimitTest() {
-        String bigPass = "passwordISgreetingMEETyouSHOWyourTALANTpoolSWAPMboard";
-
         when(accountRepository.findByUsername(newUsername)).thenReturn(Optional.empty());
 
         InvalidPasswordException exception = assertThrows(InvalidPasswordException.class, () -> {
@@ -125,8 +129,6 @@ public class AccountServiceTest {
 
     @Test
     public void register_PasswordSymbolLessLimitTest() {
-        String minimalisticPassword = "pswrd";
-
         when(accountRepository.findByUsername(newUsername)).thenReturn(Optional.empty());
 
         InvalidPasswordException exception = assertThrows(InvalidPasswordException.class, () -> {
@@ -302,7 +304,7 @@ public class AccountServiceTest {
 
         verify(accountRepository, never()).save(any(Account.class));
     }
-//я сплю, завтра переделаю
+
     @Test
     public void changeName_SuccessTest() {
         when(securityUtils.getCurrentUserId(accountRepository)).thenReturn(1L);
@@ -318,41 +320,118 @@ public class AccountServiceTest {
         assertEquals("testuser -> newuser", result.getUsername(),
                 "Значение должно быть 'testuser -> newuser'");
 
-        verify(accountRepository, times(1)).findByUsername(newUsername);
+        verify(accountRepository, times(1)).save(any(Account.class));
     }
 
     @Test
-    public void changePassword_EmptyInputTest() {
+    public void changePassword_EmptyOldPasswordInputTest() {
+        InvalidInputException exception = assertThrows(InvalidInputException.class, () -> {
+            accountService.changePassword("", newPassword);
+        });
 
+        assertEquals("Пароль не может быть пустым", exception.getMessage(),
+                "Сообщение должно быть 'Пароль не может быть пустым'");
+
+        verify(accountRepository, never()).save(any(Account.class));
+    }
+
+    @Test
+    public void changePassword_EmptyNewPasswordInputTest() {
+        InvalidInputException exception = assertThrows(InvalidInputException.class, () -> {
+            accountService.changePassword(password, "");
+        });
+
+        assertEquals("Пароль не может быть пустым", exception.getMessage(),
+                "Сообщение должно быть 'Пароль не может быть пустым'");
+
+        verify(accountRepository, never()).save(any(Account.class));
     }
 
     @Test
     public void changePassword_NotFountUserTest() {
+        when(securityUtils.getCurrentUserId(accountRepository)).thenReturn(3L);
+        when(accountRepository.findById(3L)).thenReturn(Optional.empty());
 
+        NotFoundException exception = assertThrows(NotFoundException.class, () -> {
+            accountService.changePassword(password, newPassword);
+        });
+
+        assertEquals("Пользователь не найден", exception.getMessage(),
+                "Сообщение должно быть 'Пользователь не найден'");
+
+        verify(accountRepository, never()).save(any(Account.class));
     }
 
     @Test
     public void changePassword_InvalidCurrentPasswordTest() {
+        when(securityUtils.getCurrentUserId(accountRepository)).thenReturn(1L);
+        when(accountRepository.findById(1L)).thenReturn(Optional.of(testAccount));
+        when(passwordEncoder.matches(newPassword, testAccount.getPassword())).thenReturn(false);
 
+        InvalidPasswordException exception = assertThrows(InvalidPasswordException.class, () -> {
+            accountService.changePassword(newPassword, password);
+        });
+
+        assertEquals("Неправильно указан действующий пароль", exception.getMessage(),
+                "Сообщение должно быть 'Неправильно указан действующий пароль'");
+
+        verify(accountRepository, never()).save(any(Account.class));
     }
 
     @Test
     public void changePassword_NewPasswordEqualsOldPasswordTest() {
+        when(securityUtils.getCurrentUserId(accountRepository)).thenReturn(1L);
+        when(accountRepository.findById(1L)).thenReturn(Optional.of(testAccount));
+        when(passwordEncoder.matches(password, testAccount.getPassword())).thenReturn(true);
 
+        InvalidPasswordException exception = assertThrows(InvalidPasswordException.class, () -> {
+            accountService.changePassword(password, password);
+        });
+
+        assertEquals("Новый пароль должен отличаться от старого", exception.getMessage(),
+                "Сообщение должно быть 'Новый пароль должен отличаться от старого'");
+
+        verify(accountRepository, never()).save(any(Account.class));
     }
 
     @Test
     public void changePassword_PasswordSymbolMoreLimitTest() {
+        InvalidPasswordException exception = assertThrows(InvalidPasswordException.class, () -> {
+            accountService.changePassword(password, bigPass);
+        });
 
+        assertEquals("Пароль должен быть от 6 до 30 символов", exception.getMessage(),
+                "Сообщение должно быть 'Пароль должен быть от 6 до 30 символов'");
+
+        verify(accountRepository, never()).save(any(Account.class));
     }
 
     @Test
     public void changePassword_PasswordSymbolLessLimitTest() {
+        InvalidPasswordException exception = assertThrows(InvalidPasswordException.class, () -> {
+            accountService.changePassword(password, minimalisticPassword);
+        });
 
+        assertEquals("Пароль должен быть от 6 до 30 символов", exception.getMessage(),
+                "Сообщение должно быть 'Пароль должен быть от 6 до 30 символов'");
+
+        verify(accountRepository, never()).save(any(Account.class));
     }
 
     @Test
     public void changePassword_SuccessTest() {
+        when(securityUtils.getCurrentUserId(accountRepository)).thenReturn(1L);
+        when(accountRepository.findById(1L)).thenReturn(Optional.of(testAccount));
+        when(passwordEncoder.matches(password, testAccount.getPassword())).thenReturn(true);
 
+        AccountOperationResult result = accountService.changePassword(password, newPassword);
+
+        assertNotNull(result);
+
+        assertEquals(AccountOperationType.CHANGE_PASSWORD, result.getOperationType(),
+                "Значение должно быть 'Смена пароля'");
+        assertEquals(result.getUsername(), username, "Значение должно быть 'testuser'");
+
+        verify(accountRepository, times(1)).save(any(Account.class));
     }
 }

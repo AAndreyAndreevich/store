@@ -68,15 +68,13 @@ public class AccountService {
         if (StringUtils.isEmpty(newName) || StringUtils.isEmpty(oldName)) {
             throw new InvalidInputException("Имя пользователя не может быть пустым");
         }
+        checkUsernameLength(newName);
         Long currentId = securityUtils.getCurrentUserId(accountRepository);
         Account account = accountRepository.findByUsername(oldName)
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
         if (!currentId.equals(account.getId())) {
             throw new AccessDeniedException("Пользователю не принадлежит это имя");
         }
-
-        checkUsernameLength(newName);
-
         if (accountRepository.existsByUsername(newName)) {
             throw new InvalidInputException("Имя пользователя уже занято");
         }
@@ -93,10 +91,10 @@ public class AccountService {
         if (StringUtils.isEmpty(newPassword) || StringUtils.isEmpty(oldPassword)) {
             throw new InvalidInputException("Пароль не может быть пустым");
         }
+        checkPasswordLength(newPassword);
         Long currentId = securityUtils.getCurrentUserId(accountRepository);
         Account account = accountRepository.findById(currentId)
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
-        checkPasswordLength(newPassword);
         if (!passwordEncoder.matches(oldPassword, account.getPassword())) {
             throw new InvalidPasswordException("Неправильно указан действующий пароль");
         }
