@@ -261,9 +261,6 @@ public class AccountServiceTest {
 
     @Test
     public void changeName_UsernameSymbolMoreLimitTest() {
-        when(securityUtils.getCurrentUserId(accountRepository)).thenReturn(1L);
-        when(accountRepository.findByUsername(username)).thenReturn(Optional.of(testAccount));
-
         InvalidUsernameException exception = assertThrows(InvalidUsernameException.class, () -> {
             accountService.changeName(username, biggiUsername);
         });
@@ -276,9 +273,6 @@ public class AccountServiceTest {
 
     @Test
     public void changeName_UsernameSymbolLessLimitTest() {
-        when(securityUtils.getCurrentUserId(accountRepository)).thenReturn(1L);
-        when(accountRepository.findByUsername(username)).thenReturn(Optional.of(testAccount));
-
         InvalidUsernameException exception = assertThrows(InvalidUsernameException.class, () -> {
             accountService.changeName(username, littleUsername);
         });
