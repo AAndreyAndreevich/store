@@ -46,7 +46,7 @@ class AccountDetailsServiceTest {
         when(roleRepository.findByName("ROLE_USER")).thenReturn(userRole);
         when(passwordEncoder.encode("password")).thenReturn("encodedPassword");
 
-        accountDetailsService.registerUser(user);
+        accountDetailsService.registrationUser(user);
 
         assertEquals(Collections.singleton(userRole), user.getRoles(), "Значение должно быть 'testUser'");
         assertEquals("encodedPassword", user.getPassword(), "Значение должно быть 'password'");

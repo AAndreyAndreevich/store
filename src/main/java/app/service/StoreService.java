@@ -68,11 +68,11 @@ public class StoreService {
         Store store = storeRepository.findByName(oldName)
                 .orElseThrow(() -> new NotFoundException("Магазин с названием '" + oldName + "' не найден"));
         checkLengthName(newName);
-        if (storeRepository.existsByName(newName)) {
-            throw new AlreadyExistsException("Магазин с названием '" + newName + "' существует");
-        }
         if (oldName.equals(newName)) {
             throw new InvalidInputException("Название не может совпадать");
+        }
+        if (storeRepository.existsByName(newName)) {
+            throw new AlreadyExistsException("Магазин с названием '" + newName + "' существует");
         }
         if (!store.getOwner().equals(account)) {
             throw new AccessDeniedException("Пользователю не принадлежит магазин");

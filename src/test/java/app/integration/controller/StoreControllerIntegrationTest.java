@@ -38,6 +38,8 @@ public class StoreControllerIntegrationTest {
 
     private final StoreOperationType createStoreOperation = StoreOperationType.CREATE;
 
+    //смена названия сценарии с ошибками и без
+
     @Test
     public void testCreateStoreForm() throws Exception {
         mockMvc.perform(get("/store/createStoreForm"))

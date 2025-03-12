@@ -37,7 +37,7 @@ public class AccountService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public AccountOperationResult register(String username, String password) {
+    public AccountOperationResult registration(String username, String password) {
         if (accountRepository.findByUsername(username).isPresent()) {
             throw new InvalidUsernameException("Пользователь с таким именем уже существует: " + username);
         }
@@ -48,7 +48,7 @@ public class AccountService {
         Account account = new Account();
         account.setUsername(username);
         account.setPassword(password);
-        accountDetailsService.registerUser(account);
+        accountDetailsService.registrationUser(account);
         return new AccountOperationResult(username, AccountOperationType.REGISTRATION_ACCOUNT, true);
     }
 

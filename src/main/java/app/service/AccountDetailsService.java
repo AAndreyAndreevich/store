@@ -34,7 +34,7 @@ public class AccountDetailsService  implements UserDetailsService {
     }
 
     @Transactional
-    public void registerUser(Account user) {
+    public void registrationUser(Account user) {
         Role userRole = roleRepository.findByName("ROLE_USER");
         user.setRoles(Collections.singleton(userRole));
         user.setPassword(passwordEncoder.encode(user.getPassword()));

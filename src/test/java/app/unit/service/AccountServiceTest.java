@@ -76,7 +76,7 @@ public class AccountServiceTest {
         when(accountRepository.findByUsername(username)).thenReturn(Optional.of(testAccount));
 
         InvalidUsernameException exception = assertThrows(InvalidUsernameException.class, () -> {
-            accountService.register(username, password);
+            accountService.registration(username, password);
         });
 
         assertEquals("Пользователь с таким именем уже существует: " + username, exception.getMessage(),
@@ -90,7 +90,7 @@ public class AccountServiceTest {
         when(accountRepository.findByUsername(biggiUsername)).thenReturn(Optional.empty());
 
         InvalidUsernameException exception = assertThrows(InvalidUsernameException.class, () -> {
-            accountService.register(biggiUsername, password);
+            accountService.registration(biggiUsername, password);
         });
 
         assertEquals("Имя пользователя должно быть от 4 до 20 символов", exception.getMessage(),
@@ -104,7 +104,7 @@ public class AccountServiceTest {
         when(accountRepository.findByUsername(littleUsername)).thenReturn(Optional.empty());
 
         InvalidUsernameException exception = assertThrows(InvalidUsernameException.class, () -> {
-            accountService.register(littleUsername, password);
+            accountService.registration(littleUsername, password);
         });
 
         assertEquals("Имя пользователя должно быть от 4 до 20 символов", exception.getMessage(),
@@ -118,7 +118,7 @@ public class AccountServiceTest {
         when(accountRepository.findByUsername(newUsername)).thenReturn(Optional.empty());
 
         InvalidPasswordException exception = assertThrows(InvalidPasswordException.class, () -> {
-            accountService.register(newUsername, bigPass);
+            accountService.registration(newUsername, bigPass);
         });
 
         assertEquals("Пароль должен быть от 6 до 30 символов", exception.getMessage(),
@@ -132,7 +132,7 @@ public class AccountServiceTest {
         when(accountRepository.findByUsername(newUsername)).thenReturn(Optional.empty());
 
         InvalidPasswordException exception = assertThrows(InvalidPasswordException.class, () -> {
-            accountService.register(newUsername, minimalisticPassword);
+            accountService.registration(newUsername, minimalisticPassword);
         });
 
         assertEquals("Пароль должен быть от 6 до 30 символов", exception.getMessage(),
@@ -145,7 +145,7 @@ public class AccountServiceTest {
     public void register_SuccessTest() {
         when(accountRepository.findByUsername(newUsername)).thenReturn(Optional.empty());
 
-        AccountOperationResult result = accountService.register(newUsername, "gggiano");
+        AccountOperationResult result = accountService.registration(newUsername, "gggiano");
 
         assertNotNull(result);
 

@@ -28,14 +28,14 @@ public class AccountController {
     }
 
     @PostMapping("/registration")
-    public ResponseEntity<?> registerUser(@RequestParam String username, @RequestParam String password) {
+    public ResponseEntity<?> registrationUser(@RequestParam String username, @RequestParam String password) {
         try {
-            AccountOperationResult result = accountService.register(username, password);
+            AccountOperationResult result = accountService.registration(username, password);
             return ResponseEntity.ok(result);
         } catch (InvalidUsernameException | InvalidPasswordException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Внутренняя ошибка сервера: " + e.getMessage());
+            return ResponseEntity.internalServerError().body("Внутренняя ошибка сервера: " + e.getMessage());
         }
     }
 
@@ -69,7 +69,7 @@ public class AccountController {
             AccountOperationResult result = accountService.changeName(oldName, newName);
             return ResponseEntity.ok(result);
         } catch (InvalidInputException | InvalidUsernameException | AccessDeniedException e) {
-            return ResponseEntity.badRequest().body(e);
+            return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body("Внутренняя ошибка сервера: " + e.getMessage());
         }
@@ -87,7 +87,7 @@ public class AccountController {
             AccountOperationResult result = accountService.changePassword(oldPassword, newPassword);
             return ResponseEntity.ok(result);
         } catch (InvalidInputException | InvalidPasswordException | AccessDeniedException e) {
-            return ResponseEntity.badRequest().body(e);
+            return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body("Внутренняя ошибка сервера: " + e.getMessage());
         }
