@@ -18,6 +18,7 @@ import app.repository.StoreRepository;
 import app.service.InventoryService;
 import app.utils.SecurityUtils;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -33,6 +34,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
+@Tag("Unit")
 @ExtendWith(MockitoExtension.class)
 class InventoryServiceTest {
 
@@ -62,7 +64,6 @@ class InventoryServiceTest {
 
     @BeforeEach
     public void setUp() {
-        currentErrorMessage = "Сообщение должно быть : " + errorMessage;
         storeName = "Test Store";
         productName = "Яблоко";
         count = 5;
@@ -112,6 +113,8 @@ class InventoryServiceTest {
     @Test
     public void testGetAllProducts_StoreEmpty() {
         errorMessage = "Магазин пуст или его не существует";
+        currentErrorMessage = "Сообщение должно быть : " + errorMessage;
+
         when(inventoryRepository.findByStoreId(1L)).thenReturn(List.of());
 
         NotFoundException exception = assertThrows(NotFoundException.class, () -> {
@@ -182,6 +185,8 @@ class InventoryServiceTest {
     @Test
     public void testManageProduct_UserNotFound() {
         errorMessage = "Пользователь не найден";
+        currentErrorMessage = "Сообщение должно быть : " + errorMessage;
+
         when(securityUtils.getCurrentUserId(accountRepository)).thenReturn(1L);
         when(accountRepository.findById(1L)).thenReturn(Optional.empty());
 
@@ -199,6 +204,8 @@ class InventoryServiceTest {
     @Test
     public void testManageProduct_StoreNotFount() {
         errorMessage = "Магазин не найден";
+        currentErrorMessage = "Сообщение должно быть : " + errorMessage;
+
         when(securityUtils.getCurrentUserId(accountRepository)).thenReturn(1L);
         when(accountRepository.findById(1L)).thenReturn(Optional.of(testAccount));
         when(storeRepository.findById(1L)).thenReturn(Optional.empty());
@@ -217,6 +224,8 @@ class InventoryServiceTest {
     @Test
     public void testManageProduct_ProductNotFound() {
         errorMessage = "Продукт не найден";
+        currentErrorMessage = "Сообщение должно быть : " + errorMessage;
+
         when(securityUtils.getCurrentUserId(accountRepository)).thenReturn(1L);
         when(accountRepository.findById(1L)).thenReturn(Optional.of(testAccount));
         when(storeRepository.findById(1L)).thenReturn(Optional.of(testStore));
@@ -236,6 +245,8 @@ class InventoryServiceTest {
     @Test
     public void testManageProduct_ZeroQuantity() {
         errorMessage = "Количество не может быть равно или меньше нуля";
+        currentErrorMessage = "Сообщение должно быть : " + errorMessage;
+
         when(securityUtils.getCurrentUserId(accountRepository)).thenReturn(1L);
         when(accountRepository.findById(1L)).thenReturn(Optional.of(testAccount));
         when(storeRepository.findById(1L)).thenReturn(Optional.of(testStore));
@@ -255,6 +266,8 @@ class InventoryServiceTest {
     @Test
     public void testManageProduct_ExcessBalance() {
         errorMessage = "Недостаточно средств на балансе для покупки";
+        currentErrorMessage = "Сообщение должно быть : " + errorMessage;
+
         when(securityUtils.getCurrentUserId(accountRepository)).thenReturn(1L);
         when(accountRepository.findById(1L)).thenReturn(Optional.of(testAccount));
         when(storeRepository.findById(1L)).thenReturn(Optional.of(testStore));
@@ -277,6 +290,8 @@ class InventoryServiceTest {
     @Test
     public void testManageProduct_ExceedsStorage() {
         errorMessage = "Превышена вместимость склада. Текущее количество: 1, максимальная вместимость: 69";
+        currentErrorMessage = "Сообщение должно быть : " + errorMessage;
+
         when(securityUtils.getCurrentUserId(accountRepository)).thenReturn(1L);
         when(accountRepository.findById(1L)).thenReturn(Optional.of(testAccount));
         when(storeRepository.findById(1L)).thenReturn(Optional.of(testStore));

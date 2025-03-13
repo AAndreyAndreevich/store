@@ -9,6 +9,7 @@ import app.service.AccountDetailsService;
 import app.service.AccountService;
 import app.utils.SecurityUtils;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -21,6 +22,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+@Tag("Unit")
 @ExtendWith(MockitoExtension.class)
 public class AccountServiceTest {
 
@@ -71,13 +73,13 @@ public class AccountServiceTest {
         secondName = "secend";
         secondAccount.setId(2L);
         secondAccount.setUsername(secondName);
-
-        currentErrorMessage = "Сообщение должно быть : " + errorMessage;
     }
 
     @Test
     public void register_UsernameIsExistsTest() {
         errorMessage = "Пользователь с таким именем уже существует: " + username;
+        currentErrorMessage = "Сообщение должно быть : " + errorMessage;
+
         when(accountRepository.findByUsername(username)).thenReturn(Optional.of(testAccount));
 
         InvalidUsernameException exception = assertThrows(InvalidUsernameException.class, () -> {
@@ -92,6 +94,8 @@ public class AccountServiceTest {
     @Test
     public void register_UsernameSymbolMoreLimitTest() {
         errorMessage = "Имя пользователя должно быть от 4 до 20 символов";
+        currentErrorMessage = "Сообщение должно быть : " + errorMessage;
+
         when(accountRepository.findByUsername(biggiUsername)).thenReturn(Optional.empty());
 
         InvalidUsernameException exception = assertThrows(InvalidUsernameException.class, () -> {
@@ -106,6 +110,8 @@ public class AccountServiceTest {
     @Test
     public void register_UsernameSymbolLessLimitTest() {
         errorMessage = "Имя пользователя должно быть от 4 до 20 символов";
+        currentErrorMessage = "Сообщение должно быть : " + errorMessage;
+
         when(accountRepository.findByUsername(littleUsername)).thenReturn(Optional.empty());
 
         InvalidUsernameException exception = assertThrows(InvalidUsernameException.class, () -> {
@@ -120,6 +126,8 @@ public class AccountServiceTest {
     @Test
     public void register_PasswordSymbolMoreLimitTest() {
         errorMessage = "Пароль должен быть от 6 до 30 символов";
+        currentErrorMessage = "Сообщение должно быть : " + errorMessage;
+
         when(accountRepository.findByUsername(newUsername)).thenReturn(Optional.empty());
 
         InvalidPasswordException exception = assertThrows(InvalidPasswordException.class, () -> {
@@ -134,6 +142,8 @@ public class AccountServiceTest {
     @Test
     public void register_PasswordSymbolLessLimitTest() {
         errorMessage = "Пароль должен быть от 6 до 30 символов";
+        currentErrorMessage = "Сообщение должно быть : " + errorMessage;
+
         when(accountRepository.findByUsername(newUsername)).thenReturn(Optional.empty());
 
         InvalidPasswordException exception = assertThrows(InvalidPasswordException.class, () -> {
@@ -163,6 +173,8 @@ public class AccountServiceTest {
     @Test
     public void login_InvalidUsernameInputTest() {
         errorMessage = "Пользователя с данным именем не существует: " + newUsername;
+        currentErrorMessage = "Сообщение должно быть : " + errorMessage;
+
         when(accountRepository.findByUsername(newUsername)).thenReturn(Optional.empty());
 
         InvalidAuthorizationException exception = assertThrows(InvalidAuthorizationException.class, () -> {
@@ -177,6 +189,8 @@ public class AccountServiceTest {
     @Test
     public void login_InvalidPasswordInputTest() {
         errorMessage = "Пароль указан не верно";
+        currentErrorMessage = "Сообщение должно быть : " + errorMessage;
+
         String wrongPassword = "wrong123";
 
         when(accountRepository.findByUsername(username)).thenReturn(Optional.of(testAccount));
@@ -212,6 +226,8 @@ public class AccountServiceTest {
     @Test
     public void changeName_EmptyNewNameInputTest() {
         errorMessage = "Имя пользователя не может быть пустым";
+        currentErrorMessage = "Сообщение должно быть : " + errorMessage;
+
         InvalidInputException exception = assertThrows(InvalidInputException.class, () -> {
             accountService.changeName(username, "");
         });
@@ -224,6 +240,8 @@ public class AccountServiceTest {
     @Test
     public void changeName_EmptyOldNameInputTest() {
         errorMessage = "Имя пользователя не может быть пустым";
+        currentErrorMessage = "Сообщение должно быть : " + errorMessage;
+
         InvalidInputException exception = assertThrows(InvalidInputException.class, () -> {
             accountService.changeName("", newUsername);
         });
@@ -236,6 +254,8 @@ public class AccountServiceTest {
     @Test
     public void changeName_NotFoundUserTest() {
         errorMessage = "Пользователь не найден";
+        currentErrorMessage = "Сообщение должно быть : " + errorMessage;
+
         when(securityUtils.getCurrentUserId(accountRepository)).thenReturn(2L);
         when(accountRepository.findByUsername(username)).thenReturn(Optional.empty());
 
@@ -251,6 +271,8 @@ public class AccountServiceTest {
     @Test
     public void changeName_AccessDeniedTest() {
         errorMessage = "Пользователю не принадлежит это имя";
+        currentErrorMessage = "Сообщение должно быть : " + errorMessage;
+
         when(securityUtils.getCurrentUserId(accountRepository)).thenReturn(1L);
         when(accountRepository.findByUsername(secondName)).thenReturn(Optional.of(secondAccount));
 
@@ -266,6 +288,8 @@ public class AccountServiceTest {
     @Test
     public void changeName_UsernameSymbolMoreLimitTest() {
         errorMessage = "Имя пользователя должно быть от 4 до 20 символов";
+        currentErrorMessage = "Сообщение должно быть : " + errorMessage;
+
         InvalidUsernameException exception = assertThrows(InvalidUsernameException.class, () -> {
             accountService.changeName(username, biggiUsername);
         });
@@ -278,6 +302,8 @@ public class AccountServiceTest {
     @Test
     public void changeName_UsernameSymbolLessLimitTest() {
         errorMessage = "Имя пользователя должно быть от 4 до 20 символов";
+        currentErrorMessage = "Сообщение должно быть : " + errorMessage;
+
         InvalidUsernameException exception = assertThrows(InvalidUsernameException.class, () -> {
             accountService.changeName(username, littleUsername);
         });
@@ -290,6 +316,8 @@ public class AccountServiceTest {
     @Test
     public void changeName_UsernameIsExistsTest() {
         errorMessage = "Имя пользователя уже занято";
+        currentErrorMessage = "Сообщение должно быть : " + errorMessage;
+
         when(securityUtils.getCurrentUserId(accountRepository)).thenReturn(1L);
         when(accountRepository.findByUsername(username)).thenReturn(Optional.of(testAccount));
         when(accountRepository.existsByUsername(secondName)).thenReturn(true);
@@ -324,6 +352,8 @@ public class AccountServiceTest {
     @Test
     public void changePassword_EmptyOldPasswordInputTest() {
         errorMessage = "Пароль не может быть пустым";
+        currentErrorMessage = "Сообщение должно быть : " + errorMessage;
+
         InvalidInputException exception = assertThrows(InvalidInputException.class, () -> {
             accountService.changePassword("", newPassword);
         });
@@ -336,6 +366,8 @@ public class AccountServiceTest {
     @Test
     public void changePassword_EmptyNewPasswordInputTest() {
         errorMessage = "Пароль не может быть пустым";
+        currentErrorMessage = "Сообщение должно быть : " + errorMessage;
+
         InvalidInputException exception = assertThrows(InvalidInputException.class, () -> {
             accountService.changePassword(password, "");
         });
@@ -348,6 +380,8 @@ public class AccountServiceTest {
     @Test
     public void changePassword_NotFountUserTest() {
         errorMessage = "Пользователь не найден";
+        currentErrorMessage = "Сообщение должно быть : " + errorMessage;
+
         when(securityUtils.getCurrentUserId(accountRepository)).thenReturn(3L);
         when(accountRepository.findById(3L)).thenReturn(Optional.empty());
 
@@ -363,6 +397,8 @@ public class AccountServiceTest {
     @Test
     public void changePassword_InvalidCurrentPasswordTest() {
         errorMessage = "Неправильно указан действующий пароль";
+        currentErrorMessage = "Сообщение должно быть : " + errorMessage;
+
         when(securityUtils.getCurrentUserId(accountRepository)).thenReturn(1L);
         when(accountRepository.findById(1L)).thenReturn(Optional.of(testAccount));
         when(passwordEncoder.matches(newPassword, testAccount.getPassword())).thenReturn(false);
@@ -379,6 +415,8 @@ public class AccountServiceTest {
     @Test
     public void changePassword_NewPasswordEqualsOldPasswordTest() {
         errorMessage = "Новый пароль должен отличаться от старого";
+        currentErrorMessage = "Сообщение должно быть : " + errorMessage;
+
         when(securityUtils.getCurrentUserId(accountRepository)).thenReturn(1L);
         when(accountRepository.findById(1L)).thenReturn(Optional.of(testAccount));
         when(passwordEncoder.matches(password, testAccount.getPassword())).thenReturn(true);
@@ -395,6 +433,8 @@ public class AccountServiceTest {
     @Test
     public void changePassword_PasswordSymbolMoreLimitTest() {
         errorMessage = "Пароль должен быть от 6 до 30 символов";
+        currentErrorMessage = "Сообщение должно быть : " + errorMessage;
+
         InvalidPasswordException exception = assertThrows(InvalidPasswordException.class, () -> {
             accountService.changePassword(password, bigPass);
         });
@@ -407,6 +447,8 @@ public class AccountServiceTest {
     @Test
     public void changePassword_PasswordSymbolLessLimitTest() {
         errorMessage = "Пароль должен быть от 6 до 30 символов";
+        currentErrorMessage = "Сообщение должно быть : " + errorMessage;
+
         InvalidPasswordException exception = assertThrows(InvalidPasswordException.class, () -> {
             accountService.changePassword(password, minimalisticPassword);
         });

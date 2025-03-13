@@ -6,6 +6,7 @@ import app.repository.AccountRepository;
 import app.repository.RoleRepository;
 import app.service.AccountDetailsService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -23,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
+@Tag("Unit")
 @ExtendWith(MockitoExtension.class)
 class AccountDetailsServiceTest {
 
@@ -37,11 +39,6 @@ class AccountDetailsServiceTest {
 
     private String errorMessage;
     private String currentErrorMessage;
-
-    @BeforeEach
-    public void setUp() {
-        currentErrorMessage = "Сообщение должно быть : " + errorMessage;
-    }
 
     @Test
     public void testRegisterUser_Success() {
@@ -94,16 +91,18 @@ class AccountDetailsServiceTest {
 
     @Test
     public void testLoadUsername_UserNotFound() {
-        errorMessage = "Пользователь с таким именем не найден: testUser";
-        String username = "nonExistentUser";
-        when(accountRepository.findByUsername(username)).thenReturn(Optional.empty());
+        errorMessage = "Пользователь с таким именем не найден: notFoundUser";
+        currentErrorMessage = "Сообщение должно быть : " + errorMessage;
+
+        String notFoundUser = "notFoundUser";
+        when(accountRepository.findByUsername(notFoundUser)).thenReturn(Optional.empty());
 
         UsernameNotFoundException exception = assertThrows(UsernameNotFoundException.class, () -> {
-            accountDetailsService.loadUserByUsername(username);
+            accountDetailsService.loadUserByUsername(notFoundUser);
         });
 
         assertEquals(errorMessage, exception.getMessage(), currentErrorMessage);
 
-        verify(accountRepository, times(1)).findByUsername(username);
+        verify(accountRepository, times(1)).findByUsername(notFoundUser);
     }
 }

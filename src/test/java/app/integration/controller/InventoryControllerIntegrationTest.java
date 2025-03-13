@@ -8,6 +8,7 @@ import app.handler.NotFoundException;
 import app.repository.StoreRepository;
 import app.service.InventoryService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -24,6 +25,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@Tag("Integration")
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
@@ -65,7 +67,7 @@ public class InventoryControllerIntegrationTest {
         when(inventoryService.getAllProducts(storeId)).thenThrow(
                 new NotFoundException(errorMessage));
 
-        mockMvc.perform(get("/inv/getAllProduct")
+        mockMvc.perform(get("/inv/getAllProducts")
                 .param("storeId", storeId.toString()))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(errorMessage));
@@ -97,7 +99,7 @@ public class InventoryControllerIntegrationTest {
     @Test
     public void testManageProduct_SellProduct() throws Exception {
         InventoryOperationResult result = new InventoryOperationResult(
-                buyOperation,
+                sellOperation,
                 BigDecimal.valueOf(1000),
                 "product",
                 count,
@@ -112,7 +114,7 @@ public class InventoryControllerIntegrationTest {
                         .param("storeId", storeId.toString())
                         .param("productId", productId.toString())
                         .param("count", count.toString())
-                        .param("operationType", buyOperation.name()))
+                        .param("operationType", sellOperation.name()))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(result)));
     }
