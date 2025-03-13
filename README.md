@@ -30,3 +30,5 @@
 - spring.datasource.url=ссылка на базу данных
 - spring.datasource.username=логин
 - spring.datasource.password=пароль
+
+По пути src/main/resources можно найти dump базы данных которую я использовал
