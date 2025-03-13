@@ -57,9 +57,12 @@ class InventoryServiceTest {
     private String productName;
     private Integer count;
     private List<Inventory> inventories;
+    private String errorMessage;
+    private String currentErrorMessage;
 
     @BeforeEach
     public void setUp() {
+        currentErrorMessage = "Сообщение должно быть : " + errorMessage;
         storeName = "Test Store";
         productName = "Яблоко";
         count = 5;
@@ -108,14 +111,14 @@ class InventoryServiceTest {
 
     @Test
     public void testGetAllProducts_StoreEmpty() {
+        errorMessage = "Магазин пуст или его не существует";
         when(inventoryRepository.findByStoreId(1L)).thenReturn(List.of());
 
         NotFoundException exception = assertThrows(NotFoundException.class, () -> {
             inventoryService.getAllProducts(1L);
         });
 
-        assertEquals("Магазин пуст или его не существует", exception.getMessage(),
-                "Сообщение должно быть 'Магазин пуст или его не существует'");
+        assertEquals(errorMessage, exception.getMessage(), currentErrorMessage);
 
         verify(inventoryRepository, times(1)).findByStoreId(1L);
     }
@@ -178,6 +181,7 @@ class InventoryServiceTest {
 
     @Test
     public void testManageProduct_UserNotFound() {
+        errorMessage = "Пользователь не найден";
         when(securityUtils.getCurrentUserId(accountRepository)).thenReturn(1L);
         when(accountRepository.findById(1L)).thenReturn(Optional.empty());
 
@@ -187,14 +191,14 @@ class InventoryServiceTest {
             );
         });
 
-        assertEquals("Пользователь не найден", exception.getMessage(),
-                "Сообщение должно быть 'Пользователь не найден'");
+        assertEquals(errorMessage, exception.getMessage(), currentErrorMessage);
 
         verify(inventoryRepository, never()).save(any(Inventory.class));
     }
 
     @Test
     public void testManageProduct_StoreNotFount() {
+        errorMessage = "Магазин не найден";
         when(securityUtils.getCurrentUserId(accountRepository)).thenReturn(1L);
         when(accountRepository.findById(1L)).thenReturn(Optional.of(testAccount));
         when(storeRepository.findById(1L)).thenReturn(Optional.empty());
@@ -205,14 +209,14 @@ class InventoryServiceTest {
             );
         });
 
-        assertEquals("Магазин не найден", exception.getMessage(),
-                "Сообщение должно быть 'Магазин не найден'");
+        assertEquals(errorMessage, exception.getMessage(), currentErrorMessage);
 
         verify(inventoryRepository, never()).save(any(Inventory.class));
     }
 
     @Test
     public void testManageProduct_ProductNotFound() {
+        errorMessage = "Продукт не найден";
         when(securityUtils.getCurrentUserId(accountRepository)).thenReturn(1L);
         when(accountRepository.findById(1L)).thenReturn(Optional.of(testAccount));
         when(storeRepository.findById(1L)).thenReturn(Optional.of(testStore));
@@ -224,14 +228,14 @@ class InventoryServiceTest {
             );
         });
 
-        assertEquals("Продукт не найден", exception.getMessage(),
-                "Сообщение должно быть 'Продукт не найден'");
+        assertEquals(errorMessage, exception.getMessage(), currentErrorMessage);
 
         verify(inventoryRepository, never()).save(any(Inventory.class));
     }
 
     @Test
     public void testManageProduct_ZeroQuantity() {
+        errorMessage = "Количество не может быть равно или меньше нуля";
         when(securityUtils.getCurrentUserId(accountRepository)).thenReturn(1L);
         when(accountRepository.findById(1L)).thenReturn(Optional.of(testAccount));
         when(storeRepository.findById(1L)).thenReturn(Optional.of(testStore));
@@ -243,14 +247,14 @@ class InventoryServiceTest {
             );
         });
 
-        assertEquals("Количество не может быть равно или меньше нуля", exception.getMessage(),
-                "Сообщение должно быть 'Количество не может быть равно или меньше нуля'");
+        assertEquals(errorMessage, exception.getMessage(), currentErrorMessage);
 
         verify(inventoryRepository, never()).save(any(Inventory.class));
     }
 
     @Test
     public void testManageProduct_ExcessBalance() {
+        errorMessage = "Недостаточно средств на балансе для покупки";
         when(securityUtils.getCurrentUserId(accountRepository)).thenReturn(1L);
         when(accountRepository.findById(1L)).thenReturn(Optional.of(testAccount));
         when(storeRepository.findById(1L)).thenReturn(Optional.of(testStore));
@@ -265,14 +269,14 @@ class InventoryServiceTest {
             );
         });
 
-        assertEquals("Недостаточно средств на балансе для покупки", exception.getMessage(),
-                "Сообщение должно быть 'Недостаточно средств на балансе для покупки'");
+        assertEquals(errorMessage, exception.getMessage(), currentErrorMessage);
 
         verify(inventoryRepository, times(1)).save(any(Inventory.class));
     }
 
     @Test
     public void testManageProduct_ExceedsStorage() {
+        errorMessage = "Превышена вместимость склада. Текущее количество: 1, максимальная вместимость: 69";
         when(securityUtils.getCurrentUserId(accountRepository)).thenReturn(1L);
         when(accountRepository.findById(1L)).thenReturn(Optional.of(testAccount));
         when(storeRepository.findById(1L)).thenReturn(Optional.of(testStore));
@@ -285,10 +289,7 @@ class InventoryServiceTest {
             );
         });
 
-        assertEquals("Превышена вместимость склада. Текущее количество: 1, максимальная вместимость: 69",
-                exception.getMessage(),
-                "Сообщение должно быть 'Превышена вместимость склада. " +
-                        "Текущее количество: 1, максимальная вместимость: 69'");
+        assertEquals(errorMessage, exception.getMessage(), currentErrorMessage);
 
         verify(inventoryRepository, never()).save(any(Inventory.class));
     }

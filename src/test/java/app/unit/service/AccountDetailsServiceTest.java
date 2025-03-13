@@ -5,6 +5,7 @@ import app.entity.Role;
 import app.repository.AccountRepository;
 import app.repository.RoleRepository;
 import app.service.AccountDetailsService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -33,6 +34,14 @@ class AccountDetailsServiceTest {
     private PasswordEncoder passwordEncoder;
     @InjectMocks
     private AccountDetailsService accountDetailsService;
+
+    private String errorMessage;
+    private String currentErrorMessage;
+
+    @BeforeEach
+    public void setUp() {
+        currentErrorMessage = "Сообщение должно быть : " + errorMessage;
+    }
 
     @Test
     public void testRegisterUser_Success() {
@@ -85,6 +94,7 @@ class AccountDetailsServiceTest {
 
     @Test
     public void testLoadUsername_UserNotFound() {
+        errorMessage = "Пользователь с таким именем не найден: testUser";
         String username = "nonExistentUser";
         when(accountRepository.findByUsername(username)).thenReturn(Optional.empty());
 
@@ -92,8 +102,8 @@ class AccountDetailsServiceTest {
             accountDetailsService.loadUserByUsername(username);
         });
 
-        assertEquals("Пользователь с таким именем не найден: testUser", exception.getMessage(),
-                "Сообщение должно быть 'Пользователь с таким именем не найден: testUser'");
+        assertEquals(errorMessage, exception.getMessage(), currentErrorMessage);
+
         verify(accountRepository, times(1)).findByUsername(username);
     }
 }

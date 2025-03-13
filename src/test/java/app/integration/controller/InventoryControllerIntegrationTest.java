@@ -60,13 +60,15 @@ public class InventoryControllerIntegrationTest {
 
     @Test
     public void testGetAllProducts_NotFound() throws Exception {
+        String errorMessage = "Магазин пуст или его не существует";
+
         when(inventoryService.getAllProducts(storeId)).thenThrow(
-                new NotFoundException("Магазин пуст или его не существует"));
+                new NotFoundException(errorMessage));
 
         mockMvc.perform(get("/inv/getAllProduct")
                 .param("storeId", storeId.toString()))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string("Магазин пуст или его не существует"));
+                .andExpect(content().string(errorMessage));
     }
 
     @Test
@@ -117,8 +119,10 @@ public class InventoryControllerIntegrationTest {
 
     @Test
     public void testManageProduct_InvalidInput() throws Exception {
+        String errorMessage = "Количество не может быть равно или меньше нуля";
+
         when(inventoryService.manageProduct(storeId, productId, count, buyOperation))
-                .thenThrow(new InvalidInputException("Количество не может быть равно или меньше нуля"));
+                .thenThrow(new InvalidInputException(errorMessage));
 
         mockMvc.perform(post(manageProductUrl)
                 .param("storeId", storeId.toString())
@@ -126,13 +130,15 @@ public class InventoryControllerIntegrationTest {
                 .param("count", count.toString())
                 .param("operationType", buyOperation.name()))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string("Количество не может быть равно или меньше нуля"));
+                .andExpect(content().string(errorMessage));
     }
 
     @Test
     public void testManageProduct_InsufficientBalance() throws Exception {
+        String errorMessage = "Недостаточно средств на балансе для покупки";
+
         when(inventoryService.manageProduct(storeId, productId, count, buyOperation))
-                .thenThrow(new InsufficientBalanceException("Недостаточно средств на балансе для покупки"));
+                .thenThrow(new InsufficientBalanceException(errorMessage));
 
         mockMvc.perform(post(manageProductUrl)
                         .param("storeId", storeId.toString())
@@ -140,6 +146,6 @@ public class InventoryControllerIntegrationTest {
                         .param("count", count.toString())
                         .param("operationType", buyOperation.name()))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string("Недостаточно средств на балансе для покупки"));
+                .andExpect(content().string(errorMessage));
     }
 }

@@ -42,9 +42,12 @@ class StoreServiceTest {
     private Store testStore;
     private String storeName;
     private String userName;
+    private String errorMessage;
+    private String currentErrorMessage;
 
     @BeforeEach
     public void setUp() {
+        currentErrorMessage = "Сообщение должно быть : " + errorMessage;
         storeName = "Test Store";
         userName = "testUser";
 
@@ -76,19 +79,21 @@ class StoreServiceTest {
 
     @Test
     public void createStore_EmptyStoreNameTest() {
+        errorMessage = "Название магазина не может быть пустым";
         String emptyStoreName = "";
 
         InvalidInputException exception = assertThrows(InvalidInputException.class, () -> {
             storeService.createStore(emptyStoreName);
         });
 
-        assertEquals("Название магазина не может быть пустым", exception.getMessage(),
-                "Сообщение должно быть 'Название магазина не может быть пустым'");
+        assertEquals(errorMessage, exception.getMessage(), currentErrorMessage);
+
         verify(storeRepository, never()).save(any(Store.class));
     }
 
     @Test
     public void createStore_StoreAlreadyExistsTest() {
+        errorMessage = "Магазин с названием 'Test Store' существует";
         when(securityUtils.getCurrentUserId(accountRepository)).thenReturn(1L);
         when(accountRepository.findById(1L)).thenReturn(Optional.of(testAccount));
         when(storeRepository.existsByName(storeName)).thenReturn(true);
@@ -97,14 +102,14 @@ class StoreServiceTest {
             storeService.createStore(storeName);
         });
 
-        assertEquals("Магазин с названием 'Test Store' существует", exception.getMessage(),
-                "Сообщение должно быть 'Магазин с названием 'Test Store' существует'");
+        assertEquals(errorMessage, exception.getMessage(), currentErrorMessage);
 
         verify(storeRepository, never()).save(any(Store.class));
     }
 
     @Test
     public void createStore_UserNotFountTest() {
+        errorMessage = "Пользователь не найден";
         when(securityUtils.getCurrentUserId(accountRepository)).thenReturn(1L);
         when(accountRepository.findById(1L)).thenReturn(Optional.empty());
 
@@ -112,38 +117,38 @@ class StoreServiceTest {
            storeService.createStore(storeName);
         });
 
-        assertEquals("Пользователь не найден", exception.getMessage(),
-                "Сообщение должно быть 'Пользователь не найден'");
+        assertEquals(errorMessage, exception.getMessage(), currentErrorMessage);
 
         verify(storeRepository, never()).save(any(Store.class));
     }
 
     @Test
     public void changeName_EmptyNewNameTest() {
+        errorMessage = "Название магазина не может быть пустым";
         InvalidInputException exception = assertThrows(InvalidInputException.class, () -> {
             storeService.changeName("store", "");
         });
 
-        assertEquals("Название магазина не может быть пустым", exception.getMessage(),
-                "Сообщение должно быть 'Название магазина не может быть пустым'");
+        assertEquals(errorMessage, exception.getMessage(), currentErrorMessage);
 
         verify(storeRepository, never()).save(any(Store.class));
     }
 
     @Test
     public void changeName_EmptyOldNameTest() {
+        errorMessage = "Название магазина не может быть пустым";
         InvalidInputException exception = assertThrows(InvalidInputException.class, () -> {
             storeService.changeName("", "store");
         });
 
-        assertEquals("Название магазина не может быть пустым", exception.getMessage(),
-                "Сообщение должно быть 'Название магазина не может быть пустым'");
+        assertEquals(errorMessage, exception.getMessage(), currentErrorMessage);
 
         verify(storeRepository, never()).save(any(Store.class));
     }
 
     @Test
     public void changeName_NotFoundUserTest() {
+        errorMessage = "Пользователь не найден";
         when(securityUtils.getCurrentUserId(accountRepository)).thenReturn(1L);
         when(accountRepository.findById(1L)).thenReturn(Optional.empty());
 
@@ -151,14 +156,14 @@ class StoreServiceTest {
             storeService.changeName("Тестеровочка", "Тестер");
         });
 
-        assertEquals("Пользователь не найден", exception.getMessage(),
-                "Сообщение должно быть 'Пользователь не найден'");
+        assertEquals(errorMessage, exception.getMessage(), currentErrorMessage);
 
         verify(storeRepository, never()).save(any(Store.class));
     }
 
     @Test
     public void changeName_NotFoundStoreTest() {
+        errorMessage = "Магазин с названием 'Test Store' не найден";
         when(securityUtils.getCurrentUserId(accountRepository)).thenReturn(1L);
         when(accountRepository.findById(1L)).thenReturn(Optional.of(testAccount));
         when(storeRepository.findByName(storeName)).thenReturn(Optional.empty());
@@ -167,14 +172,14 @@ class StoreServiceTest {
             storeService.changeName(storeName, "тести");
         });
 
-        assertEquals("Магазин с названием 'Test Store' не найден", exception.getMessage(),
-                "Сообщение должно быть 'Магазин с названием 'Test Store' не найден'");
+        assertEquals(errorMessage, exception.getMessage(), currentErrorMessage);
 
         verify(storeRepository, never()).save(any(Store.class));
     }
 
     @Test
     public void changeName_StoreNameIsExistsTest() {
+        errorMessage = "Магазин с названием 'Exists' существует";
         String existsName = "Exists";
 
         when(securityUtils.getCurrentUserId(accountRepository)).thenReturn(1L);
@@ -186,14 +191,14 @@ class StoreServiceTest {
             storeService.changeName(storeName, existsName);
         });
 
-        assertEquals("Магазин с названием 'Exists' существует", exception.getMessage(),
-                "Сообщение должно быть 'Магазин с названием 'Exists' существует'");
+        assertEquals(errorMessage, exception.getMessage(), currentErrorMessage);
 
         verify(storeRepository, never()).save(any(Store.class));
     }
 
     @Test
     public void changeName_NewNameEqualsOldNameTest() {
+        errorMessage = "Название не может совпадать";
         when(securityUtils.getCurrentUserId(accountRepository)).thenReturn(1L);
         when(accountRepository.findById(1L)).thenReturn(Optional.of(testAccount));
         when(storeRepository.findByName(storeName)).thenReturn(Optional.of(testStore));
@@ -202,14 +207,14 @@ class StoreServiceTest {
             storeService.changeName(storeName, storeName);
         });
 
-        assertEquals("Название не может совпадать", exception.getMessage(),
-                "Сообщение должно быть 'Название не может совпадать'");
+        assertEquals(errorMessage, exception.getMessage(), currentErrorMessage);
 
         verify(storeRepository, never()).save(any(Store.class));
     }
 
     @Test
     public void changeName_AccessDeniedStoreTest() {
+        errorMessage = "Пользователю не принадлежит магазин";
         Store accessDeniedStore = new Store();
         String anotherTestStoreName = "Access Denied";
         accessDeniedStore.setName(anotherTestStoreName);
@@ -224,14 +229,14 @@ class StoreServiceTest {
             storeService.changeName(anotherTestStoreName, "Самый новый");
         });
 
-        assertEquals("Пользователю не принадлежит магазин", exception.getMessage(),
-                "Сообщение должно быть 'Пользователю не принадлежит магазин'");
+        assertEquals(errorMessage, exception.getMessage(), currentErrorMessage);
 
         verify(storeRepository, never()).save(any(Store.class));
     }
 
     @Test
     public void changeName_NameSymbolMoreLimitTest() {
+        errorMessage = "Название магазина должно быть от 3 до 30 символов";
         when(securityUtils.getCurrentUserId(accountRepository)).thenReturn(1L);
         when(accountRepository.findById(1L)).thenReturn(Optional.of(testAccount));
         when(storeRepository.findByName(storeName)).thenReturn(Optional.of(testStore));
@@ -240,14 +245,14 @@ class StoreServiceTest {
             storeService.changeName(storeName, "12");
         });
 
-        assertEquals("Название магазина должно быть от 3 до 30 символов", exception.getMessage(),
-                "Сообщение должно быть 'Название магазина должно быть от 3 до 30 символов'");
+        assertEquals(errorMessage, exception.getMessage(), currentErrorMessage);
 
         verify(storeRepository, never()).save(any(Store.class));
     }
 
     @Test
     public void changeName_NameSymbolLessLimitTest() {
+        errorMessage = "Название магазина должно быть от 3 до 30 символов";
         when(securityUtils.getCurrentUserId(accountRepository)).thenReturn(1L);
         when(accountRepository.findById(1L)).thenReturn(Optional.of(testAccount));
         when(storeRepository.findByName(storeName)).thenReturn(Optional.of(testStore));
@@ -256,8 +261,7 @@ class StoreServiceTest {
             storeService.changeName(storeName, "123456789_123456789_123456789_1");
         });
 
-        assertEquals("Название магазина должно быть от 3 до 30 символов", exception.getMessage(),
-                "Сообщение должно быть 'Название магазина должно быть от 3 до 30 символов'");
+        assertEquals(errorMessage, exception.getMessage(), currentErrorMessage);
 
         verify(storeRepository, never()).save(any(Store.class));
     }
