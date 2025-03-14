@@ -39,6 +39,18 @@ dependencies {
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
+def unitTests = tasks.register("Unit", Test) {
+	useJUnitPlatform {
+		includeTags "Unit"
+	}
+}
+
+def integrationTests = tasks.register("Integration", Test) {
+	useJUnitPlatform {
+		includeTags "Integration"
+	}
+}
+
 tasks.named('test') {
 	useJUnitPlatform()
 }
