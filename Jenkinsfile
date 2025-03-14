@@ -26,7 +26,7 @@ pipeline {
         stage('Load Database Dump') {
             steps {
                 // Загружаем dump базы данных
-                sh 'postgresql -u $DB_USER -p$DB_PASSWORD your_database < src/main/resources/data.sql'
+                sh 'postgresql -u $DB_USER -p$DB_PASSWORD storedb < src/main/resources/data.sql'
             }
         }
 
