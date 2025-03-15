@@ -11,6 +11,7 @@
 ## Ссылки
 
 - Проект с UI-тестами на Selenium: https://github.com/AAndreyAndreevich/store-tests.git
+- Postman тесты: https://github.com/AAndreyAndreevich/store-tests-postman.git
 
 ## Контакты
 
